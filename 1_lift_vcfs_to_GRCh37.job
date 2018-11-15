@@ -1,0 +1,136 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=8gb
+#PBS -q sata 
+#PBS -l walltime=340:00:00
+#PBS -j oe
+
+echo "Running on node:"
+hostname
+
+module load plink2
+module load ucsc_tools/373
+module load vcftools
+module load samtools
+
+mkdir -p /scratch_sata_output/raqueld/$PBS_JOBID
+export TMPDIR=/scratch_sata_output/raqueld/$PBS_JOBID
+
+#Examples of the variables needed (-v)
+#myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
+#buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked
+#myoutdir=/stsi/raqueld/1_lift
+
+#How to run Example
+#qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,myoutdir=/stsi/raqueld/1_lift,copyoutput=yes -N 1_6800_JHS_all_chr_sampleID_c2
+
+#path to program
+#/gpfs/home/raqueld/bin/LiftMap.py
+
+filename=$(basename $myinput)
+
+cd $myoutdir
+
+name=$(echo $filename | sed -e 's/\.vcf$//g' | sed -e 's/\.vcf.gz$//g')
+
+vcfstarttime=$(date +%s)
+echo "Converting vcf to ped/map.."
+#plink --vcf $myinput --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
+vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --vcf-half-call missing --out $name.sorted.bi
+
+plink --bfile $name.sorted.bi --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
+
+rm $name.sorted.bi.*
+
+vcfendtime=$(date +%s)
+
+cfilename=$(grep "Use chain file" $buildcheck | tr -d ' ' | tr ':' '\t' | tr -d '"' | cut -f 2 | sed -e 's/->/ /g')
+nchains=$(echo $cfilename | tr ' ' '\n' | wc -l | awk '{print $1}')
+
+checknone=$(grep "Use chain file" $buildcheck | grep "none" | wc -l)
+
+if [ $checknone -eq 1 ]; then
+
+     convstarttime=$(date +%s)
+
+     echo "The data set is already based on the correct reference build (Grch37). Just converting and copying it."
+     #plink --vcf $myinput  --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
+     vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --allow-extra-chr --vcf-half-call missing --out $name.lifted_already_GRCh37.sorted.bi
+     plink --bfile $name.lifted_already_GRCh37.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
+
+     convendtime=$(date +%s)
+
+     copystarttime=$(date +%s)
+
+     if [ "$copyoutput" == "yes" ]; then
+     
+     echo "copying results to /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift"
+     cp $name.lifted_already_GRCh37* /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift/
+
+     fi
+
+     copyendtime=$(date +%s)
+
+
+	vcfruntime=$((vcfendtime-vcfstarttime))
+	convruntime=$((convendtime-convstarttime))
+	copyruntime=$((copyendtime-copystarttime))
+
+	echo "vcf convert time: $vcfruntime"
+	echo "liftover run time: Not needed to run"
+	echo "output convertion run time: $convruntime"
+	echo "copy run time: $copyruntime"
+     
+
+     exit
+fi
+
+echo "Number of chain files: $nchains"
+
+liftstarttime=$(date +%s)
+echo "Lifting ped/map using chain file(s): $cfilename..."
+
+if [ "$nchains" -eq 1 ]; then
+     liftname=$(echo $cfilename |  sed -e 's/\.chain.*//g')
+     /gpfs/home/raqueld/bin/LiftMap.py -p $name.ped -m $name.map -c /gpfs/home/raqueld/chainfiles/$cfilename -o $name.lifted_$liftname
+
+fi
+if [ "$nchains" -eq 2 ]; then
+     first=$(echo $cfilename | tr ' ' '\n' | head -n 1)
+     second=$(echo $cfilename | tr ' ' '\n' | tail -n 1)
+     liftname=$(echo $first |  sed -e 's/\.chain.*//g')
+     /gpfs/home/raqueld/bin/LiftMap.py -m $name.map -c /gpfs/home/raqueld/chainfiles/$first -o $name.lifted_$liftname
+     liftname=$(echo $second |  sed -e 's/\.chain.*//g')
+     /gpfs/home/raqueld/bin/LiftMap.py -m $name.lifted_$liftname.map -c /gpfs/home/raqueld/chainfiles/$second -o $name.lifted_$liftname
+fi
+liftendtime=$(date +%s)
+
+convstarttime=$(date +%s)
+
+echo "Converting lifted output $name.lifted_$liftname to bed/bim/fam.."
+plink --file $name.lifted_$liftname --keep-allele-order --double-id --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted
+plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname
+rm $name.lifted_$liftname.sorted.*
+
+rm -rf /scratch_sata_output/raqueld/$PBS_JOBID
+
+convendtime=$(date +%s)
+
+copystarttime=$(date +%s)
+
+if [ "$copyoutput" == "yes" ]; then
+	echo "copying results to /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift"
+	cp $name.lifted_$liftname* /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift/
+fi
+
+copyendtime=$(date +%s)
+
+vcfruntime=$((vcfendtime-vcfstarttime))
+liftruntime=$((liftendtime-liftstarttime))
+convruntime=$((convendtime-convstarttime))
+copyruntime=$((copyendtime-copystarttime))
+
+echo "vcf convert time: $vcfruntime"
+echo "liftover run time: $liftruntime"
+echo "output convertion run time: $convruntime"
+echo "copy run time: $copyruntime"

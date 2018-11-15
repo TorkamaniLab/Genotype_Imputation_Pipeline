@@ -1,0 +1,129 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=12gb
+#PBS -q sata 
+#PBS -l walltime=340:00:00
+#PBS -j oe
+
+echo "Running on node:"
+hostname
+
+module load vcftools
+module load plink2
+module load admixture
+module load samtools/1.9
+module load R
+
+#bcftools=/gpfs/home/raqueld/bin/bcftools/bin/bcftools
+
+#How to run Example
+#qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
+
+starttime=$(date +%s)
+
+
+filename=$(basename $myinput)
+inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
+outsubdir=$(basename $myinput | sed -e 's~\.lifted.*~~g')
+indir=$(dirname $myinput)
+
+if [ ! -d $myoutdir/$outsubdir ]; then
+	mkdir -p $myoutdir/$outsubdir
+fi
+
+cd $myoutdir/$outsubdir
+
+echo "Preparing data to run ancestry analysis."
+
+vcfstarttime=$(date +%s)
+
+echo "Pruning markers using 0.05 LD threshold"
+plink --bfile $indir/$inprefix --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+
+plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned
+
+tabix -p vcf $inprefix.pruned.vcf.gz
+
+echo "Doing last check for allele swaps"
+bcftools +fixref $inprefix.pruned.vcf.gz -Oz -o $inprefix.pruned.fix.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
+
+tabix -p vcf $inprefix.pruned.fix.vcf.gz
+
+echo "Generating intersection between input data and reference panel for ancestry"
+bcftools isec $inprefix.pruned.fix.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz
+
+bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
+
+tabix -f -p vcf $inprefix.pruned.intersect1KG.vcf.gz
+
+echo "Converting intersection to bed format"
+plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --double-id --make-bed --out $inprefix.pruned.intersect1KG
+
+
+echo "Generating population file for admixture"
+inputN=$(vcf-query -l $inprefix.pruned.fix.vcf.gz | wc -l | awk '{print $1}')
+
+if [ -f $inprefix.pruned.intersect1KG.pop ]; then
+	
+	rm $inprefix.pruned.intersect1KG.pop
+
+fi
+
+for i in $(seq 1 1 $inputN); do
+     echo >> $inprefix.pruned.intersect1KG.pop
+done
+
+cat /stsi/raqueld/ref/ancestry/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
+
+vcfendtime=$(date +%s)
+
+
+admstarttime=$(date +%s)
+
+	admixture --supervised $inprefix.pruned.intersect1KG.bed 5
+
+admendtime=$(date +%s)
+
+poststarttime=$(date +%s)
+
+echo "Splitting subjects by ancestry..."
+
+vcf-query -l $inprefix.pruned.intersect1KG.vcf.gz > $inprefix.pruned.intersect1KG.subjectIDs
+
+paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
+
+#vcf-query -l $inprefix.pruned.fix.vcf.gz > $inprefix.pruned.subjectIDs
+cat $indir/$inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
+
+Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+
+#6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.5.ids
+#6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.mixed.ids
+
+for i in $(seq 1 5); do 
+
+	if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids ]; then
+
+		plink --bfile $indir/$inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --make-bed --out $inprefix.ancestry-$i
+
+	fi
+
+done
+
+if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids ]; then
+
+	plink --bfile $indir/$inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --make-bed --out $inprefix.ancestry-mixed
+fi
+
+echo "Execution complete. Results ready for HWE filtering and phasing at $myoutdir/$outsubdir/$inprefix.ancestry-_.bed"
+
+postendtime=$(date +%s)
+
+vcfruntime=$((vcfendtime-vcfstarttime))
+admruntime=$((admendtime-admstarttime))
+postruntime=$((postendtime-poststarttime))
+
+echo "Preprocessing run time: $vcfruntime"
+echo "Admixture run time: $admruntime"
+echo "Postprocessing run time: $postruntime"
+

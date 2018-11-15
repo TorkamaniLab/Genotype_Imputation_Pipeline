@@ -1,0 +1,137 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=16gb
+#PBS -q sata 
+#PBS -l walltime=540:00:00
+#PBS -j oe
+
+date
+
+echo "Running on node:"
+hostname
+pwd
+
+#myoutdir example:
+#/stsi/raqueld/2_GH
+#myinput example:
+#qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
+
+module load vcftools
+module load samtools
+module load plink2
+
+
+starttime=$(date +%s)
+
+export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
+export indir=$(dirname $myinput)
+
+cd $myoutdir
+
+#outname=$(echo $filename | sed -e 's/\.vcf.*/\.GH/g')
+export outname=$(basename $myinput | sed -e 's/\.bed$/\.GH/g')
+
+#export SHELL=$(type -p bash)
+PLINK_FUN() {
+
+	if [ "$1" -eq 23 ]; then
+		plink --bfile $indir/$inprefix --chr $1,X --make-bed --out $inprefix.chr$1
+	else
+		plink --bfile $indir/$inprefix --chr $1 --make-bed --out $inprefix.chr$1
+	
+	fi
+
+}
+export -f PLINK_FUN
+
+
+GH_FUN () {
+	if [ "$1" -eq 23 ]; then
+		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
+		--ref /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz \
+		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
+
+	else
+		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
+		--ref /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr$1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
+		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
+	fi
+}
+
+export -f GH_FUN
+
+plinkstarttime=$(date +%s)
+	parallel -j 16 PLINK_FUN ::: {1..23}
+plinkendtime=$(date +%s)
+
+GHstarttime=$(date +%s)
+	parallel -j 8 GH_FUN ::: {1..23}
+GHendtime=$(date +%s)
+
+
+
+if [ -f $inprefix.chrlist ]; then 
+	rm $inprefix.chrlist
+fi
+
+mergestarttime=$(date +%s)
+
+for i in {2..23}; do
+
+	if [ -f $outname.chr$i.bed ]; then
+		echo $outname.chr$i >> $inprefix.chrlist
+		#echo $outname.chr$i.bed >> $inprefix.chrlist
+		#echo $outname.chr$i.bim >> $inprefix.chrlist
+		#echo $outname.chr$i.fam >> $inprefix.chrlist
+	fi
+
+done
+
+echo "Merging all chromosomes..."
+plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --keep-allele-order --make-bed --out ./$outname
+
+echo "Cleaning temporary files..."
+
+rm $inprefix.chrlist
+for i in {1..23}; do
+
+	if [ -f $outname.chr$i.bed ]; then
+
+		rm $outname.chr$i.bed
+		rm $outname.chr$i.bim
+		rm $outname.chr$i.fam
+	fi
+
+	if [ -f $inprefix.chr$i.bed ]; then
+
+		rm $inprefix.chr$i.*
+		
+	fi
+
+done
+
+mergeendtime=$(date +%s)
+
+#GHstarttime=$(date +%s)
+
+#java -Xmx32g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $indir/$inprefix \
+#--ref /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz \
+#--inputType PLINK_BED --output ./$outname
+
+#GHendtime=$(date +%s)
+
+
+#output example
+#ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out.GH.bed
+
+endtime=$(date +%s)
+
+plinkruntime=$((plinkendtime-plinkstarttime))
+GHruntime=$((GHendtime-GHstarttime))
+mergeruntime=$((mergeendtime-mergestarttime))
+overallruntime=$((endtime-starttime))
+
+echo "plink run time: $plinkruntime"
+echo "GH run time: $GHruntime"
+echo "merge run time: $mergeruntime"
+echo "Overall run time: $overallruntime"
