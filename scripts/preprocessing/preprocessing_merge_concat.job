@@ -1,0 +1,87 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=8gb
+#PBS -q sata 
+#PBS -l walltime=340:00:00
+#PBS -j oe
+
+echo "Running on node:"
+hostname
+
+module load vcftools
+module load samtools
+
+#Examples of the variables needed (-v)
+#myinput=/stsi/raqueld/vcf/to_concat/CHGS_WGS_frz3_FHS_EA_chr*.c1.vcf
+
+#How to run Example
+#qsub preprocessing_merge_concat.job -v myinput=/stsi/raqueld/vcf/to_concat/CHGS_WGS_frz3_FHS_EA_chr*.c1.vcf,concat=yes,merge=no -N concat_CHGS_WGS_frz3_FHS_EA_chr.c1.vcf
+#qsub preprocessing_merge_concat.job -v myinput="/stsi/raqueld/vcf/to_merge/v3.AJ.clean.updated.all_c1.vcf /stsi/raqueld/vcf/to_merge/v3.AJ.clean.updated.all_c2.vcf /stsi/raqueld/vcf/to_merge/v3.AJ.clean.updated.all_c3.vcf /stsi/raqueld/vcf/to_merge/v3.AJ.clean.updated.all_c4.vcf",concat=no,merge=yes -N merge_v3.AJ.clean.updated.all_c1
+
+name=$(echo $filename | sed -e 's/\.vcf$//g')
+
+vcfstarttime=$(date +%s)
+
+echo "Initial preparation step..."
+for i in $myinput; do
+	echo "Fixing header..."
+	bash ~/scripts/fix_format_header.sh $i
+	bash ~/scripts/fix_info_header.sh $i.new
+	rm $i.new
+
+	echo "Removing variants with invalid characters (N or _)..."
+	awk '{if ($4 != "N" && $5 != "N" && $4 != "_" && $5 != "_") print $0}' $i.new.new > $i.clean
+	rm $i.new.new
+
+	echo "Compressing to $i.gz"
+	bgzip -c $i.clean > $i.gz
+	tabix -f -p vcf $i.gz
+
+	echo "Extracting GT field from vcf..."
+	bcftools annotate -x INFO,^FORMAT/GT $i.gz -Oz -o $i.GT.gz
+	tabix -f -p vcf $i.GT.gz
+	echo "$i done"
+done
+
+echo "Initial preparation done."
+
+vcfendtime=$(date +%s)
+
+constarttime=$(date +%s)
+
+
+
+if [ "$concat" == "yes" ]; then
+	name=$(echo $myinput. | tr -d '*' | sed -e 's/\.vcf.*//g')
+	echo "Concatenating $myinput.GT.gz..."
+	echo "bcftools concat -a -Oz -o ${name}_concat.vcf.gz $myinput.GT.gz" 
+	bcftools concat -a -Oz -o ${name}_concat.vcf.gz $myinput.GT.gz 
+	tabix -f -p vcf ${name}_concat.vcf.gz
+fi
+
+conendtime=$(date +%s)
+
+merstarttime=$(date +%s)
+
+if [ "$merge" == "yes" ]; then
+	
+	name=$(echo $myinput | awk '{print $1}' | sed -e 's/\.vcf//g')
+	mylist=$(echo $myinput | sed -e 's/\.vcf/\.vcf\.GT\.gz/g')
+	echo "Merging $ylist..."
+	echo "bcftools merge -m all -Oz -o ${name}_merge.vcf.gz $mylist"
+	bcftools merge -m all -Oz -o ${name}_merge.vcf.gz $mylist
+	tabix -f -p vcf ${name}_merge.vcf.gz
+fi
+
+merendtime=$(date +%s)
+
+
+vcfruntime=$((vcfendtime-vcfstarttime))
+conruntime=$((conendtime-constarttime))
+merruntime=$((merendtime-merstarttime))
+#copyruntime=$((copyendtime-copystarttime))
+
+echo "vcf convert time: $vcfruntime"
+echo "Concatenation run time: $conruntime"
+echo "Merging run time: $merruntime"
+#echo "copy run time: $copyruntime"
