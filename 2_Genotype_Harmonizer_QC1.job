@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=16
-#PBS -l mem=16gb
+#PBS -l mem=120gb
 #PBS -q sata 
 #PBS -l walltime=540:00:00
 #PBS -j oe
@@ -17,8 +17,8 @@ pwd
 #qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
 
 module load vcftools
-module load samtools
-module load plink2
+module load samtools/1.9 # version of samtools >= 1.9 is required for running `bcftools +fixref`
+module load plink2/1.90b3.42 # It's plink v1.90b3.42, temp issue on Garibaldi.
 
 
 starttime=$(date +%s)
@@ -29,7 +29,7 @@ export indir=$(dirname $myinput)
 cd $myoutdir
 
 #outname=$(echo $filename | sed -e 's/\.vcf.*/\.GH/g')
-export outname=$(basename $myinput | sed -e 's/\.bed$/\.GH/g')
+export outname=$(basename $myinput | sed -e 's/\.bed$/\.GH.fix/g')
 
 #export SHELL=$(type -p bash)
 PLINK_FUN() {
@@ -49,16 +49,29 @@ GH_FUN () {
 	if [ "$1" -eq 23 ]; then
 		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
 		--ref /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz \
-		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
+		--inputType PLINK_BED --callRateFilter 0.90 --output ./$inprefix.GH.chr$1
 
 	else
 		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
 		--ref /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr$1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
-		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
+		--inputType PLINK_BED --callRateFilter 0.90 --output ./$inprefix.GH.chr$1
 	fi
 }
-
 export -f GH_FUN
+
+# export BCFTOOLS_PLUGINS="~/bin/bcftools/bcftools-1.9/plugins/"
+FIX_FUN () {
+
+	plink --bfile $inprefix.GH.chr$1 --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.GH.chr$1
+	tabix -p vcf $inprefix.GH.chr$1.vcf.gz
+
+	echo "Doing last check for allele swaps"
+
+	bcftools +fixref $inprefix.GH.chr$1.vcf.gz -Oz -o $outname.chr$1.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
+	tabix -p vcf $outname.chr$1.vcf.gz
+
+}
+export -f FIX_FUN
 
 plinkstarttime=$(date +%s)
 	parallel -j 16 PLINK_FUN ::: {1..23}
@@ -68,6 +81,9 @@ GHstarttime=$(date +%s)
 	parallel -j 8 GH_FUN ::: {1..23}
 GHendtime=$(date +%s)
 
+FIXstarttime=$(date +%s)
+	parallel -j 16 FIX_FUN ::: {1..23}
+FIXendtime=$(date +%s)
 
 
 if [ -f $inprefix.chrlist ]; then 
@@ -78,8 +94,9 @@ mergestarttime=$(date +%s)
 
 for i in {2..23}; do
 
-	if [ -f $outname.chr$i.bed ]; then
-		echo $outname.chr$i >> $inprefix.chrlist
+	if [ -f $outname.chr$i.vcf.gz ]; then
+		echo $outname.chr$1.vcf.gz >> $outname.chrlist
+		#echo $outname.chr$i >> $inprefix.chrlist
 		#echo $outname.chr$i.bed >> $inprefix.chrlist
 		#echo $outname.chr$i.bim >> $inprefix.chrlist
 		#echo $outname.chr$i.fam >> $inprefix.chrlist
@@ -88,18 +105,22 @@ for i in {2..23}; do
 done
 
 echo "Merging all chromosomes..."
-plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --keep-allele-order --make-bed --out ./$outname
+
+# plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --keep-allele-order --make-bed --out ./$outname
+
+bcftools merge -l $inprefix.chrlist -Oz -o $outname
 
 echo "Cleaning temporary files..."
 
 rm $inprefix.chrlist
 for i in {1..23}; do
 
-	if [ -f $outname.chr$i.bed ]; then
+	if [ -f outname.chr$i.vcf.gz ]; then
 
-		rm $outname.chr$i.bed
-		rm $outname.chr$i.bim
-		rm $outname.chr$i.fam
+		rm outname.chr$i.vcf.gz
+		# rm $outname.chr$i.bed
+		# rm $outname.chr$i.bim
+		# rm $outname.chr$i.fam
 	fi
 
 	if [ -f $inprefix.chr$i.bed ]; then
@@ -128,10 +149,12 @@ endtime=$(date +%s)
 
 plinkruntime=$((plinkendtime-plinkstarttime))
 GHruntime=$((GHendtime-GHstarttime))
+FIXruntime=$((FIXendtime-FIXstarttime))
 mergeruntime=$((mergeendtime-mergestarttime))
 overallruntime=$((endtime-starttime))
 
 echo "plink run time: $plinkruntime"
 echo "GH run time: $GHruntime"
+echo "Fix run time: $FIXruntime"
 echo "merge run time: $mergeruntime"
 echo "Overall run time: $overallruntime"

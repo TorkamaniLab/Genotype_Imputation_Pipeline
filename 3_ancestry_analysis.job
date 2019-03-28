@@ -9,7 +9,7 @@ echo "Running on node:"
 hostname
 
 module load vcftools
-module load plink2
+module load plink2/1.90b3.42 # It's plink v1.90b3.42, temp issue on Garibaldi.
 module load admixture
 module load samtools/1.9
 module load R
@@ -17,13 +17,14 @@ module load R
 #bcftools=/gpfs/home/raqueld/bin/bcftools/bin/bcftools
 
 #How to run Example
-#qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
+#qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.fix.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
 
 starttime=$(date +%s)
 
 
 filename=$(basename $myinput)
-inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
+# inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
+inprefix=$(basname $myinput | sed -e 's/\.vcf.gz$//g')
 outsubdir=$(basename $myinput | sed -e 's~\.lifted.*~~g')
 indir=$(dirname $myinput)
 
@@ -38,16 +39,20 @@ echo "Preparing data to run ancestry analysis."
 vcfstarttime=$(date +%s)
 
 echo "Pruning markers using 0.05 LD threshold"
-plink --bfile $indir/$inprefix --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+# plink --bfile $indir/$inprefix --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 
-plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned
+plink --vcf $indir/$filename --double-id --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+
+# plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned
+
+plink --vcf $indir/$filename --double-id --extract $inprefix.prune.in --out $inprefix.pruned
 
 tabix -p vcf $inprefix.pruned.vcf.gz
 
-echo "Doing last check for allele swaps"
-bcftools +fixref $inprefix.pruned.vcf.gz -Oz -o $inprefix.pruned.fix.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
+# echo "Doing last check for allele swaps"
+# bcftools +fixref $inprefix.pruned.vcf.gz -Oz -o $inprefix.pruned.fix.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
 
-tabix -p vcf $inprefix.pruned.fix.vcf.gz
+# tabix -p vcf $inprefix.pruned.fix.vcf.gz
 
 echo "Generating intersection between input data and reference panel for ancestry"
 bcftools isec $inprefix.pruned.fix.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz

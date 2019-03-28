@@ -1,0 +1,8 @@
+the local scratch directory for this session is:  /scratch/sfchen/3267062.garibaldi01-adm.cluster.net
+the distributed scratch directory for this session is:  /gpfs/work/sfchen/3267062.garibaldi01-adm.cluster.net
+Running on node:
+nodeb0230
+Running vcf build check
+vcf check run time: 149
+Extract run time: 0
+Copy run time: 0
