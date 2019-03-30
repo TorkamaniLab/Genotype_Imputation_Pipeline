@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
+#PBS -l mem=16gb
 #PBS -q sata 
 #PBS -l walltime=540:00:00
 #PBS -j oe
@@ -18,7 +18,7 @@ pwd
 
 module load vcftools
 module load samtools/1.9 # version of samtools >= 1.9 is required for running `bcftools +fixref`
-module load plink2/1.90b3.42 # It's plink v1.90b3.42, temp issue on Garibaldi.
+module load plink2 # It's plink v1.90b3.42, temp issue on Garibaldi.
 
 
 starttime=$(date +%s)
@@ -67,8 +67,8 @@ FIX_FUN () {
 
 	echo "Doing last check for allele swaps"
 
-	bcftools +fixref $inprefix.GH.chr$1.vcf.gz -Oz -o $outname.chr$1.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
-	tabix -p vcf $outname.chr$1.vcf.gz
+	bcftools +fixref $inprefix.GH.chr$1.vcf.gz -Oz -o $inprefix.GH.fix.chr$1.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
+	tabix -p vcf $inprefix.GH.fix.chr$1.vcf.gz
 
 }
 export -f FIX_FUN
@@ -92,10 +92,10 @@ fi
 
 mergestarttime=$(date +%s)
 
-for i in {2..23}; do
+for i in {1..23}; do
 
-	if [ -f $outname.chr$i.vcf.gz ]; then
-		echo $outname.chr$1.vcf.gz >> $outname.chrlist
+	if [ -f $inprefix.GH.fix.chr$i.vcf.gz ]; then
+		echo $inprefix.GH.fix.chr$i.vcf.gz >> $inprefix.chrlist
 		#echo $outname.chr$i >> $inprefix.chrlist
 		#echo $outname.chr$i.bed >> $inprefix.chrlist
 		#echo $outname.chr$i.bim >> $inprefix.chrlist
@@ -108,25 +108,34 @@ echo "Merging all chromosomes..."
 
 # plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --keep-allele-order --make-bed --out ./$outname
 
-bcftools merge -l $inprefix.chrlist -Oz -o $outname
+bcftools concat -f $inprefix.chrlist -Oz -o $outname.vcf.gz
+
+
 
 echo "Cleaning temporary files..."
 
 rm $inprefix.chrlist
 for i in {1..23}; do
 
-	if [ -f outname.chr$i.vcf.gz ]; then
+	if [ -f $inprefix.chr$i.bed ]; then
 
-		rm outname.chr$i.vcf.gz
+		rm $inprefix.chr$i*
+
+	fi
+
+
+        if [ -f $inprefix.GH.chr$i.bed ]; then
+
+                rm $inprefix.GH.chr$i.*
+
+        fi
+
+	if [ -f $inprefix.GH.fix.chr$i.vcf.gz ]; then
+
+		rm $inprefix.GH.fix.chr$i.vcf.gz*
 		# rm $outname.chr$i.bed
 		# rm $outname.chr$i.bim
 		# rm $outname.chr$i.fam
-	fi
-
-	if [ -f $inprefix.chr$i.bed ]; then
-
-		rm $inprefix.chr$i.*
-		
 	fi
 
 done
