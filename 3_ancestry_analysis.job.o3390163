@@ -1,0 +1,47 @@
+the local scratch directory for this session is:  /scratch/sfchen/3390163.garibaldi01-adm.cluster.net
+the distributed scratch directory for this session is:  /gpfs/work/sfchen/3390163.garibaldi01-adm.cluster.net
+Running on node:
+nodeb0224
+Preparing data to run ancestry analysis.
+Pruning markers using 0.05 LD threshold
+Generating intersection between input data and reference panel for ancestry
+Converting intersection to bed format
+Generating population file for admixture
+
+gzip: stdout: Broken pipe
+Splitting subjects by ancestry...
+
+gzip: stdout: Broken pipe
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+[1] "Original number of subjects: 3340"
+[1] "Admixed number of subjects remaining: 3340"
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.ancestry-mixed.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_2_GH-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix
+  --keep ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.pruned.intersect1KG.5.Q.IDs.mixed.ids
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.ancestry-mixed
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+Error: Failed to open
+/gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_2_GH-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.bed.
+Execution complete. Results ready for HWE filtering and phasing at /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_3_ancestry-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.ancestry-_.bed
+Preprocessing run time: 0
+Admixture run time: 0
+Postprocessing run time: 2

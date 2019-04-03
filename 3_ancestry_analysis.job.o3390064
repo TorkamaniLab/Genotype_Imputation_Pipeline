@@ -1,0 +1,70 @@
+the local scratch directory for this session is:  /scratch/sfchen/3390064.garibaldi01-adm.cluster.net
+the distributed scratch directory for this session is:  /gpfs/work/sfchen/3390064.garibaldi01-adm.cluster.net
+Running on node:
+nodeb0224
+Preparing data to run ancestry analysis.
+Pruning markers using 0.05 LD threshold
+Generating intersection between input data and reference panel for ancestry
+Converting intersection to bed format
+Generating population file for admixture
+
+gzip: stdout: Broken pipe
+****                   ADMIXTURE Version 1.3.0                  ****
+****                    Copyright 2008-2015                     ****
+****           David Alexander, Suyash Shringarpure,            ****
+****                John  Novembre, Ken Lange                   ****
+****                                                            ****
+****                 Please cite our paper!                     ****
+****   Information at www.genetics.ucla.edu/software/admixture  ****
+
+Random seed: 43
+Point estimation method: Block relaxation algorithm
+Convergence acceleration algorithm: QuasiNewton, 3 secant conditions
+Point estimation will terminate when objective function delta < 0.0001
+Estimation of standard errors disabled; will compute point estimates only.
+Supervised analysis mode.  Examining .pop file...
+Size of G: 5844x35987
+Performing five EM steps to prime main algorithm
+1 (EM) 	Elapsed: 31.161	Loglikelihood: -1.59885e+08	(delta): 2.02157e+08
+2 (EM) 	Elapsed: 31.163	Loglikelihood: -1.557e+08	(delta): 4.1846e+06
+3 (EM) 	Elapsed: 31.159	Loglikelihood: -1.54752e+08	(delta): 947828
+4 (EM) 	Elapsed: 31.16	Loglikelihood: -1.54452e+08	(delta): 299956
+5 (EM) 	Elapsed: 31.16	Loglikelihood: -1.5431e+08	(delta): 142574
+Initial loglikelihood: -1.5431e+08
+Starting main algorithm
+1 (QN/Block) 	Elapsed: 68.69	Loglikelihood: -1.5034e+08	(delta): 3.96968e+06
+2 (QN/Block) 	Elapsed: 67.362	Loglikelihood: -1.49934e+08	(delta): 405831
+3 (QN/Block) 	Elapsed: 74.103	Loglikelihood: -1.49851e+08	(delta): 83437.7
+4 (QN/Block) 	Elapsed: 74.43	Loglikelihood: -1.49799e+08	(delta): 52170
+5 (QN/Block) 	Elapsed: 74.497	Loglikelihood: -1.49778e+08	(delta): 20857.6
+6 (QN/Block) 	Elapsed: 78.171	Loglikelihood: -1.49774e+08	(delta): 4143.59
+7 (QN/Block) 	Elapsed: 85.415	Loglikelihood: -1.49773e+08	(delta): 257.017
+8 (QN/Block) 	Elapsed: 74.537	Loglikelihood: -1.49773e+08	(delta): 74.0154
+9 (QN/Block) 	Elapsed: 86.021	Loglikelihood: -1.49773e+08	(delta): 8.59403
+10 (QN/Block) 	Elapsed: 86.018	Loglikelihood: -1.49773e+08	(delta): 0.239194
+11 (QN/Block) 	Elapsed: 75.144	Loglikelihood: -1.49773e+08	(delta): 0.0111622
+12 (QN/Block) 	Elapsed: 78.708	Loglikelihood: -1.49773e+08	(delta): 0.00276858
+13 (QN/Block) 	Elapsed: 81.546	Loglikelihood: -1.49773e+08	(delta): 0.00140545
+14 (QN/Block) 	Elapsed: 75.086	Loglikelihood: -1.49773e+08	(delta): 0.000614583
+15 (QN/Block) 	Elapsed: 75.288	Loglikelihood: -1.49773e+08	(delta): 0.000181973
+16 (QN/Block) 	Elapsed: 75.288	Loglikelihood: -1.49773e+08	(delta): 2.0802e-05
+Summary: 
+Converged in 16 iterations (1473.23 sec)
+Loglikelihood: -149773234.698432
+Fst divergences between estimated populations: 
+	Pop0	Pop1	Pop2	Pop3	
+Pop0	
+Pop1	0.101	
+Pop2	0.027	0.068	
+Pop3	0.035	0.065	0.033	
+Pop4	0.070	0.125	0.070	0.076	
+Writing output files.
+Splitting subjects by ancestry...
+
+gzip: stdout: Broken pipe
+cp: cannot stat `/gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_2_GH-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.subjectIDs': No such file or directory
+Fatal error: cannot open file '/gpfs/group/torkamani/shaun/190315_Phasing_Variation/Genotype_Imputation_Pipeline/split_by_ancestry/split_by_ancestry.R': No such file or directory
+Execution complete. Results ready for HWE filtering and phasing at /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_3_ancestry-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.ancestry-_.bed
+Preprocessing run time: 0
+Admixture run time: 1484
+Postprocessing run time: 1

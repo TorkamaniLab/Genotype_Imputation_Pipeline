@@ -1,0 +1,19 @@
+the local scratch directory for this session is:  /scratch/sfchen/3390145.garibaldi01-adm.cluster.net
+the distributed scratch directory for this session is:  /gpfs/work/sfchen/3390145.garibaldi01-adm.cluster.net
+Running on node:
+nodeb0224
+Preparing data to run ancestry analysis.
+Pruning markers using 0.05 LD threshold
+Generating intersection between input data and reference panel for ancestry
+Converting intersection to bed format
+Generating population file for admixture
+
+gzip: stdout: Broken pipe
+Splitting subjects by ancestry...
+
+gzip: stdout: Broken pipe
+Fatal error: cannot open file '/gpfs/group/torkamani/shaun/190315_Phasing_Variation/Genotype_Imputation_Pipeline/split_by_ancestry/split_by_ancestry.R': No such file or directory
+Execution complete. Results ready for HWE filtering and phasing at /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_3_ancestry-update/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.fix.ancestry-_.bed
+Preprocessing run time: 0
+Admixture run time: 0
+Postprocessing run time: 0

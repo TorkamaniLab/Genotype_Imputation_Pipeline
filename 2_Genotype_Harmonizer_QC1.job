@@ -90,6 +90,12 @@ if [ -f $inprefix.chrlist ]; then
 	rm $inprefix.chrlist
 fi
 
+if [ -f $inprefix.subjectIDs ]; then
+	rm $inprefix.subjectIDs
+fi
+
+cat $inprefix.GH.chr1.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' >> $outname.subjectIDs
+
 mergestarttime=$(date +%s)
 
 for i in {1..23}; do

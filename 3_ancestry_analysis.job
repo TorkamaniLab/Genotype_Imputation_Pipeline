@@ -42,28 +42,30 @@ echo "Pruning markers using 0.05 LD threshold"
 # plink --bfile $indir/$inprefix --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 # plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned
 
-plink --vcf $indir/$filename --double-id --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
-plink --vcf $indir/$filename --double-id --make-bed --extract $inprefix.prune.in --recode vcf bgz --out $inprefix.pruned
-tabix -p vcf $inprefix.pruned.vcf.gz
+  plink --vcf $indir/$filename --double-id --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+  plink --vcf $indir/$filename --double-id --make-bed --extract $inprefix.prune.in --recode vcf bgz --out $inprefix.pruned
+  tabix -p vcf $inprefix.pruned.vcf.gz
 
 # echo "Doing last check for allele swaps"
 # bcftools +fixref $inprefix.pruned.vcf.gz -Oz -o $inprefix.pruned.fix.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
 # tabix -p vcf $inprefix.pruned.fix.vcf.gz
+# NOTE: Fixing step moved to step_2
 
 echo "Generating intersection between input data and reference panel for ancestry"
 # bcftools isec $inprefix.pruned.fix.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz
 
-bcftools isec $inprefix.pruned.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz
-bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
+  bcftools isec $inprefix.pruned.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz
+  bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
 
-tabix -f -p vcf $inprefix.pruned.intersect1KG.vcf.gz
+  tabix -f -p vcf $inprefix.pruned.intersect1KG.vcf.gz
 
 echo "Converting intersection to bed format"
-plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --double-id --make-bed --out $inprefix.pruned.intersect1KG
+  plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --double-id --make-bed --out $inprefix.pruned.intersect1KG
 
 
 echo "Generating population file for admixture"
-inputN=$(vcf-query -l $inprefix.pruned.fix.vcf.gz | wc -l | awk '{print $1}')
+# inputN=$(vcf-query -l $inprefix.pruned.fix.vcf.gz | wc -l | awk '{print $1}')
+inputN=$(vcf-query -l $inprefix.pruned.vcf.gz | wc -l | awk '{print $1}')
 
 if [ -f $inprefix.pruned.intersect1KG.pop ]; then
 	
@@ -95,9 +97,10 @@ vcf-query -l $inprefix.pruned.intersect1KG.vcf.gz > $inprefix.pruned.intersect1K
 paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
 
 #vcf-query -l $inprefix.pruned.fix.vcf.gz > $inprefix.pruned.subjectIDs
-cat $indir/$inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
+# cat $indir/$inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
+cp $indir/$inprefix.subjectIDs $inprefix.pruned.subjectIDs
 
-Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+Rscript  /gpfs/group/torkamani/shaun/190315_Phasing_Variation/Genotype_Imputation_Pipeline/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
 
 #6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.5.ids
 #6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.mixed.ids
