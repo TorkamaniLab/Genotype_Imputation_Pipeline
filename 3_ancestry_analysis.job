@@ -40,7 +40,7 @@ vcfstarttime=$(date +%s)
 echo "Pruning markers using 0.05 LD threshold"
 plink --bfile $indir/$inprefix --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 
-plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned
+plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1,\$2 --out $inprefix.pruned # already --set-missing-var-ids in step_2 once
 
 tabix -p vcf $inprefix.pruned.vcf.gz
 
@@ -50,7 +50,7 @@ bcftools +fixref $inprefix.pruned.vcf.gz -Oz -o $inprefix.pruned.fix.vcf.gz -- -
 tabix -p vcf $inprefix.pruned.fix.vcf.gz
 
 echo "Generating intersection between input data and reference panel for ancestry"
-bcftools isec $inprefix.pruned.fix.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz
+bcftools isec $inprefix.pruned.fix.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 -Oz # only under Shaun's folder
 
 bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
 
@@ -95,7 +95,7 @@ paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q
 #vcf-query -l $inprefix.pruned.fix.vcf.gz > $inprefix.pruned.subjectIDs
 cat $indir/$inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
 
-Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95 # only under personal home folder
 
 #6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.5.ids
 #6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.mixed.ids

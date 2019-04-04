@@ -1,0 +1,1037 @@
+the local scratch directory for this session is:  /scratch/sfchen/3394739.garibaldi01-adm.cluster.net
+the distributed scratch directory for this session is:  /gpfs/work/sfchen/3394739.garibaldi01-adm.cluster.net
+Wed Apr  3 18:26:29 PDT 2019
+Running on node:
+nodeb0213
+/gpfs/home/sfchen
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 1
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+65961 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994317.
+65961 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 4
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+51696 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.99395.
+51696 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 5
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+52319 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994166.
+52319 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 6
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+52176 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.99389.
+52176 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 7
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+43586 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994117.
+43586 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 8
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+45163 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994273.
+45163 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 9
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+38306 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994079.
+38306 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr9.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 10
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+44824 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.99438.
+44824 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr10.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 11
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+41267 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.99433.
+41267 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr11.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 12
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+39408 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993925.
+39408 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr12.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 13
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+31776 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993991.
+31776 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr13.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 14
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+25983 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993949.
+25983 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr14.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 15
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+24113 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994382.
+24113 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr15.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 16
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+25682 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994081.
+25682 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr16.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 2
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+68587 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993932.
+68587 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 3
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+56369 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994187.
+56369 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr23.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 23,X
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr23
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+Error: All variants excluded.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 21
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+11619 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993869.
+11619 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr21.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 17
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+19102 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.99416.
+19102 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr17.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 18
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+24543 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994143.
+24543 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr18.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 19
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+10972 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.993055.
+10972 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr19.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 20
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+21262 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994554.
+21262 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr20.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+PLINK v1.90b3.42 64-bit (20 Sep 2016)      https://www.cog-genomics.org/plink2
+(C) 2005-2016 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22.log.
+Options in effect:
+  --bfile /gpfs/group/torkamani/shaun/190315_Phasing_Variation/ARIC/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect
+  --chr 22
+  --make-bed
+  --out ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22
+
+129095 MB RAM detected; reserving 64547 MB for main workspace.
+10656 variants loaded from .bim file.
+3340 people (0 males, 0 females, 3340 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22.nosex
+.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 3340 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.992757.
+10656 variants and 3340 people pass filters and QC.
+Note: No phenotypes present.
+--make-bed to
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22.bed
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22.bim
++
+ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr22.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+parallel: SIGTERM received. No new jobs will be started.
+parallel: Waiting for these 8 jobs to finish. Send SIGTERM again to stop now.
+parallel: GH_FUN 8
+parallel: GH_FUN 3
+parallel: GH_FUN 6
+parallel: GH_FUN 1
+parallel: GH_FUN 5
+parallel: GH_FUN 4
+parallel: GH_FUN 7
+parallel: GH_FUN 2
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr1 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr1
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr2 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr2
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr2.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr3 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr3
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr3.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr4 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr4
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr5 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr5
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr5.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr6 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr6
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr6.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr7 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr7
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr7.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
+Iteration 1 - Completed, non A/T and non G/C SNPs are aligned 36,292 found and 18,010 swapped
+Iteration 2 - Skipped, non A/T and non G/C SNPs are not LD checked 
+  /---------------------------------------\
+  |          Genotype Harmonizer          |
+  |                                       |
+  |             Patrick Deelen            |
+  |        patrickdeelen@gmail.com        |
+  |                                       |
+  | Harm-Jan Westra, Joeri van der Velde, |
+  |    Marc Jan Bonder, Erwin Winder,     |
+  |           Dennis Hendriksen           |
+  |      Lude Franke, Morris Swertz       |
+  |                                       |
+  |     Genomics Coordication Center      |
+  |  University Medical Center Groningen  |
+  \---------------------------------------/
+
+          --- Version: 1.4.20-SNAPSHOT ---
+
+More information: http://molgenis.org/systemsgenetics
+
+Current date and time: 2019-04-03 18:26:49
+
+Started logging
+
+Interpreted arguments: 
+ - Input base path: ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.chr8 
+ - Input data type: Plink BED / BIM / FAM files
+ - Output base path: ./ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37_intersect.GH.chr8
+ - Output data type: Plink BED / BIM / FAM files
+ - Reference base path: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr8.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+ - Reference data type: VCF file
+ - Number of flank variants to consider for LD alignment: 100
+ - Minimum LD of flanking variants before using for LD alignment: 0.3
+ - Minimum number of variants needed to for LD alignment: 3
+ - Maximum MAF of variants to use minor allele as backup for alignment: 0.0
+ - Update study IDs: no
+ - Match study reference alleles: no
+ - Keep variants not in reference data: yes
+ - Minimum posterior probability for input data: 0.4
+ - LD checker off
+ - Force input sequence name: not forcing
+ - Filter input data on minimum variant call-rate: 0.9
+
+Input data loaded
+Reference data loaded
+Beginning alignment
+Iteration 1 - 10,000 variants processed
+Iteration 1 - 20,000 variants processed
+Iteration 1 - 30,000 variants processed
+Iteration 1 - 40,000 variants processed
