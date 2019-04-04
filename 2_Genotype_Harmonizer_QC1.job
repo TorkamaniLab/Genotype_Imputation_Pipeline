@@ -142,28 +142,28 @@ for i in {1..23}; do
 	fi
 
 # Remove before-fix recode temporary files
-        if [ -f $inprefix.GH.chr$1.vcf.gz ]; then
+        if [ -f $inprefix.GH.chr$i.vcf.gz ]; then
 
-                rm $inprefix.GH.chr$i.vcf.gz
+                rm $inprefix.GH.chr$i.vcf.gz*
 
         fi
 
 # Remove bcftools +fixref temporary files
-        if [ -f $inprefix.GH.fix.chr$1.vcf.gz ]; then
+        if [ -f $inprefix.GH.fix.chr$i.vcf.gz ]; then
 
-                rm $inprefix.GH.fix.chr$i.vcf.gz
+                rm $inprefix.GH.fix.chr$i.vcf.gz*
 
         fi
 
 # Remove bcftools pick-unique temporary files
-        if [ -f $outname.chr$1.vcf.gz ]; then
+        if [ -f $outname.chr$i.vcf.gz ]; then
 
-                rm $outname.chr$i.vcf.gz
+                rm $outname.chr$i.vcf.gz*
 
         fi
 
 # Remove after-fix make-bed temporary files
-        if [ -f $outname.chr$1.bed ]; then
+        if [ -f $outname.chr$i.bed ]; then
 
                 rm $outname.chr$i.*
 
