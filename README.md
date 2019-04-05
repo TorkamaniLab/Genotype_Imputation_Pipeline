@@ -19,58 +19,71 @@ __This pipeline ONLY worked on Garibaldi__
 ### *::Data cleaning::*
 
 #### Step 0: Check genome build and select chain file
- - `~/check_vcf_build/check_vcf_build.R` 
-  - copied from `/gpfs/home/raqueld/check_vcf_build`
- - myinput=`/path/vcf/filename.vcf`
- - myouput=`/0_check_vcf_build/filename.BuildChecked`
- - copyoutput=`yes`or`no`
-  - to save in p1 storage
- - gz=`yes`or`no`
-  - to compress
+
+- [x] `~/check_vcf_build/check_vcf_build.R` 
+    * copied from `/gpfs/home/raqueld/check_vcf_build`
 
 ```ruby
 qsub 0_check_vcf_build.job -v  myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,copyoutput=yes,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2
 ```
-
+* myinput=`/path/vcf/filename.vcf`
+* myouput=`/0_check_vcf_build/filename.BuildChecked`
+* copyoutput=`yes`or`no`
+    * to save in p1 storage
+* gz=`yes`or`no`
+    * to compress
 
 #### Step 1: Lifeover to GRCh37
 __This step will liftover the input to GRCh37 according the `.BuildChecked` file to pick chain file.__  
 
- - `~/bin/LiftMap.py` (
-  - copied from `/gpfs/home/raqueld/bin`)
- - myinput=`/path/vcf/filename.vcf`
- - buildcheck=`/path/0_check_vcf_build/filename.BuildChecked`
- - myoutdir=`/path/1_lift`
- - copyoutput=`yes`or`no` (to save in p1 storage)
+- [x] `~/bin/LiftMap.py`
+    * copied from `/gpfs/home/raqueld/bin`
+- [x] `~/chainfiles/*.chain`
+    * copied from `/gpfs/home/raqueld/chainfiles/*.chain`
 
+    
 ```ruby
 qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,myoutdir=/stsi/raqueld/1_lift,copyoutput=yes -N 1_6800_JHS_all_chr_sampleID_c2
 ```
 
 
-#### Step 2: Gene Hormonizer and 1st quality control
-__The input file will be split by chromosome and align __
+* myinput=`/path/vcf/filename.vcf`
+* buildcheck=`/path/0_check_vcf_build/filename.BuildChecked`
+* myoutdir=`/path/1_lift`
+* copyoutput=`yes`or`no`
+    * to save in p1 storage
 
- - myinput=`/path/vcf/filename.vcf`   
- - buildcheck=`/path/0_check_vcf_build/filename.BuildChecked`  
- - myoutdir=`/path/1_lift`  
+#### Step 2: Gene Hormonizer and 1st quality control
+__The input file will be split by chromosome for parallel hormonization and to fix REF/ALT swap.__
+- [x] `~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar`
+    * copied from `/gpfs/home/raqueld/bin`
+- [x] `/gpfs/group/torkamani/shaun/1000G_VCF/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz`
 
 ```ruby
 qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
 ```
+* myinput=`/path/vcf/inprefix.vcf`   
+* myoutdir=`/path/2_GH/`
+    * `inprefix.GH.bed`
+    * `inprefix.GH.fam`
+    * `inprefix.GH.bim`
+
 
 
 #### Step 3: Ancestry estimation
-`~/split_by_ancestry/split_by_ancestry.R` (copied from `/gpfs/home/raqueld/split_by_ancestry`)  
 
- - myinput=`/path/2_GH/inprefix.GH.fix.vcf.gz`   
- - myoutdir=`/path/3_ancestry`  
+* `/gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz`
+* `~/split_by_ancestry/split_by_ancestry.R` (copied from `/gpfs/home/raqueld/split_by_ancestry`)  
+
 
  
 ```ruby
-qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.fix.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
+qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
 ```
-
+* myinput=`/path/2_GH/inprefix.bed`
+    * with `fam` and `bim` files
+* myoutdir=`/path/3_ancestry`  
+    * 
 
 #### Step 4: 2nd quality control
  
