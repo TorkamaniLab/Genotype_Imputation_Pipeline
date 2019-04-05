@@ -4,7 +4,7 @@ automatic identification of reference genome build and selection of correct chai
 
 ## Dependencies
 
-Only on Garibaldi
+__Only on Garibaldi__  
 ```module load plink2/```  
 ```module load vcftools```  
 ```module load plink2/1.90b3.42```  
