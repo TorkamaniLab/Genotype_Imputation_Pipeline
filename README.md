@@ -66,7 +66,7 @@ __Prerequisite__
 
 - [x] `~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar`
     * copied from `/gpfs/home/raqueld/bin`
-- [x] `/gpfs/group/torkamani/shaun/1000G_VCF/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz`
+- [x]`/gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz`
 
 __Usage example__ 
  
@@ -74,7 +74,7 @@ __Usage example__
 qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
 ```
 * myinput=`/path/vcf/inprefix.vcf`   
-* myoutdir=`/path/2_GH/`
+* myoutdir=`/path/2_GH`
     * `inprefix.GH.bed/fam/bim`
 
 
