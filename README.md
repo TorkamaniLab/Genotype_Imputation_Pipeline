@@ -10,7 +10,8 @@ __This pipeline ONLY on Garibaldi__
 ```module load plink2/1.90b3.42```  
 ```module load samtools/1.9```  
 ```module load R```  
-```~/split_by_ancestry/split_by_ancestry.R``` (copied /gpbs/home/raqueld/split_by_ancestry)  
+```~/check_vcf_build/check_vcf_build.R``` (compied from /gpfs/home/raqueld/check_vcf_build)
+```~/split_by_ancestry/split_by_ancestry.R``` (copied from /gpfs/home/raqueld/split_by_ancestry)  
 ```~/bin/LiftMap.py``` (copied /gpfs/home/raqueld/bin)  
 
 ## Usage example
