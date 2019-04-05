@@ -16,7 +16,8 @@ __This pipeline ONLY on Garibaldi__
 
 ### Step 0
 automatic identification of reference genome build and selection of correct chain file  
-```qsub 0_check_vcf_build.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,copyoutput=yes,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2```
+```ruby
+qsub 0_check_vcf_build.job -v  myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,copyoutput=yes,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2```
 
 - **Option 1**
     - 
