@@ -5,13 +5,13 @@ automatic identification of reference genome build and selection of correct chai
 ## Dependencies
 
 Only on Garibaldi
-```module load plink2/```
-```module load vcftools```
-```module load plink2/1.90b3.42```
-```module load samtools/1.9```
-```module load R```
-```~/split_by_ancestry/split_by_ancestry.R``` (copied /gpbs/home/raqueld/split_by_ancestry)
-```~/bin/LiftMap.py``` (copied /gpfs/home/raqueld/bin)
+```module load plink2/```  
+```module load vcftools```  
+```module load plink2/1.90b3.42```  
+```module load samtools/1.9```  
+```module load R```  
+```~/split_by_ancestry/split_by_ancestry.R``` (copied /gpbs/home/raqueld/split_by_ancestry)  
+```~/bin/LiftMap.py``` (copied /gpfs/home/raqueld/bin)  
 
 ## Usage example
 
