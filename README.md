@@ -16,7 +16,7 @@ __This pipeline ONLY worked on Garibaldi__
 
 ## Usage example
 
-###
+### Data cleaning
 
 #### Step 0: Check genome build and select chain file
 
@@ -51,7 +51,8 @@ qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-b
 ```ruby
 qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sampleID_c1/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.ancestry-5.bed,myoutdir=/stsi/raqueld/4_split_QC2,hwe='',geno=0.1,mind=0.1 -N 4_6800_JHS_all_chr_sampleID_c1
 ```
-###
+
+### Data Processing
 
 #### Step 5: Phasing
 
