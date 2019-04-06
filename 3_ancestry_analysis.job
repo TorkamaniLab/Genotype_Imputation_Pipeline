@@ -51,6 +51,9 @@ plink --vcf $myinput --indep-pairwise 100 10 0.05 --out $inprefix # produces <na
 #plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $inprefix.pruned
 vcftools --gzvcf $myinput --snps $inprefix.prune.in --recode --recode-INFO-all --out $inprefix.pruned
 
+bgzip -c $inprefix.pruned.recode.vcf > $inprefix.pruned.vcf.gz
+rm $inprefix.pruned.recode.vcf
+
 tabix -p vcf $inprefix.pruned.vcf.gz
 
 echo "Generating intersection between input data and reference panel for ancestry"
