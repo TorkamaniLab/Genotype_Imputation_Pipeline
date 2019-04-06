@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=16
-#PBS -l mem=16gb
-#PBS -q sata 
+#PBS -l mem=32gb
+#PBS -q stsi 
 #PBS -l walltime=540:00:00
 #PBS -j oe
 
@@ -16,8 +16,15 @@ pwd
 #myinput example:
 #qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
 
+#Step 2
+#Split genotype file by chromosome
+#Filter SNPs by 90% call rate (per variant, not subject)
+#Fix ambiguous genotype swaps
+#Fix non ambiguous genotype swaps
+#Remove duplicate SNPs
+
 module load vcftools
-module load samtools
+module load samtools/1.9
 module load plink2
 
 
@@ -35,9 +42,10 @@ export outname=$(basename $myinput | sed -e 's/\.bed$/\.GH/g')
 PLINK_FUN() {
 
 	if [ "$1" -eq 23 ]; then
-		plink --bfile $indir/$inprefix --chr $1,X --make-bed --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
+		#plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --chr $1,X --recode vcf bgz --out $inprefix.chr$1
 	else
-		plink --bfile $indir/$inprefix --chr $1 --make-bed --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
 	
 	fi
 
@@ -88,7 +96,27 @@ for i in {2..23}; do
 done
 
 echo "Merging all chromosomes..."
-plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --keep-allele-order --make-bed --out ./$outname
+plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
+
+#RR moving fix ref and introducing remove duplicates
+plink --bfile $outname.m --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
+
+tabix -p vcf $outname.0.vcf.gz
+rm $outname.m.bed $outname.m.bim $outname.m.fam
+
+echo "Doing last check for allele swaps"
+bcftools +fixref $outname.0.vcf.gz -Oz -o $outname.1.vcf.gz -- -f /stsi/raqueld/ref/human_g1k_v37.fasta -m flip -d
+
+tabix -p vcf $outname.1.vcf.gz
+rm $outname.0.vcf.gz
+
+bcftools view -Ou -c 2 $outname.1.vcf.gz | bcftools norm -m -any | bcftools norm -Oz -o $outname.vcf.gz -d both -f /stsi/raqueld/ref/human_g1k_v37.fasta
+
+tabix -p vcf $outname.vcf.gz
+
+rm $outname.1.vcf.gz
+
+
 
 echo "Cleaning temporary files..."
 
@@ -122,7 +150,7 @@ mergeendtime=$(date +%s)
 
 
 #output example
-#ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out.GH.bed
+#ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out.GH.vcf.gz
 
 endtime=$(date +%s)
 
