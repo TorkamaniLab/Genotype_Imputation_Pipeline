@@ -95,12 +95,16 @@ poststarttime=$(date +%s)
 
 echo "Splitting subjects by ancestry..."
 
-vcf-query -l $inprefix.pruned.intersect1KG.vcf.gz | tr '_' '\t' > $inprefix.pruned.intersect1KG.subjectIDs
+cat $inprefix.pruned.intersect1KG.fam > $inprefix.pruned.intersect1KG.subjectIDs
 
 paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
 
 #vcf-query -l $inprefix.pruned.vcf.gz > $inprefix.pruned.subjectIDs
-cat $indir/$inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
+
+echo "Converting input to bed format"
+plink --vcf $myinput --keep-allele-order --double-id --make-bed --out $inprefix
+
+cat $inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
 
 Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
 
@@ -111,7 +115,7 @@ for i in $(seq 1 5); do
 
 	if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids ]; then
 
-		plink --bfile $indir/$inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --make-bed --out $inprefix.ancestry-$i
+		plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --make-bed --out $inprefix.ancestry-$i
 
 	fi
 
@@ -119,7 +123,7 @@ done
 
 if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids ]; then
 
-	plink --bfile $indir/$inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --make-bed --out $inprefix.ancestry-mixed
+	plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --make-bed --out $inprefix.ancestry-mixed
 fi
 
 echo "Execution complete. Results ready for HWE filtering and phasing at $myoutdir/$outsubdir/$inprefix.ancestry-_.bed"
