@@ -99,7 +99,7 @@ echo "Merging all chromosomes..."
 plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
 
 #RR moving fix ref and introducing remove duplicates
-plink --bfile $outname.m --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
+plink --bfile $outname.m --recode vcf bgz --double-id --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
 
 tabix -p vcf $outname.0.vcf.gz
 rm $outname.m.bed $outname.m.bim $outname.m.fam

@@ -95,7 +95,7 @@ poststarttime=$(date +%s)
 
 echo "Splitting subjects by ancestry..."
 
-vcf-query -l $inprefix.pruned.intersect1KG.vcf.gz > $inprefix.pruned.intersect1KG.subjectIDs
+vcf-query -l $inprefix.pruned.intersect1KG.vcf.gz | tr '_' '\t' > $inprefix.pruned.intersect1KG.subjectIDs
 
 paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
 
