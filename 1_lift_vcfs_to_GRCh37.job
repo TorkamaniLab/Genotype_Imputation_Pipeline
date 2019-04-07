@@ -35,12 +35,10 @@ name=$(echo $filename | sed -e 's/\.vcf$//g' | sed -e 's/\.vcf.gz$//g')
 
 vcfstarttime=$(date +%s)
 echo "Converting vcf to ped/map.."
-#plink --vcf $myinput --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
-vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --vcf-half-call missing --out $name.sorted.bi
+#vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --biallelic-only strict --double-id --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
+vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
 
 plink --bfile $name.sorted.bi --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
-
-rm $name.sorted.bi.*
 
 vcfendtime=$(date +%s)
 
@@ -55,8 +53,24 @@ if [ $checknone -eq 1 ]; then
 
      echo "The data set is already based on the correct reference build (Grch37). Just converting and copying it."
      #plink --vcf $myinput  --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
-     vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --allow-extra-chr --vcf-half-call missing --out $name.lifted_already_GRCh37.sorted.bi
-     plink --bfile $name.lifted_already_GRCh37.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
+     #vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --allow-extra-chr --biallelic-only strict --vcf-half-call missing --out $name.lifted_already_GRCh37.sorted.bi
+     #plink --bfile $name.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
+     #Try this if the line above fails
+     plink --bfile $name.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37.sorted.with_dup
+     cut -f 2 $name.lifted_already_GRCh37.sorted.with_dup.bim | sort | uniq -d > $name.list_multi_a_markers.txt
+	ndup=$(wc -l $name.list_multi_a_markers.txt | awk '{print $1}')
+	if [ "$ndup" -ge 1 ]; then
+		echo "Still found duplicate variant ids or multiallelic markers after filtering. Performing additional filtering."
+		dupflag=$(echo -e "--exclude $name.list_multi_a_markers.txt")
+	else
+		dupflag=""
+	fi
+     plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --make-bed --out $name.lifted_already_GRCh37
+ 
+
+     rm $name.sorted.bi.*
+     rm $name.lifted_already_GRCh37.sorted.*
+     rm $name.list_multi_a_markers.txt
 
      convendtime=$(date +%s)
 
@@ -109,10 +123,26 @@ convstarttime=$(date +%s)
 
 echo "Converting lifted output $name.lifted_$liftname to bed/bim/fam.."
 plink --file $name.lifted_$liftname --keep-allele-order --double-id --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted
-plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname
-rm $name.lifted_$liftname.sorted.*
+#plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname
+#Try this if the line above fails
+plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted.with_dup
+cut -f 2 $name.lifted_$liftname.sorted.with_dup.bim | sort | uniq -d > $name.list_multi_a_markers.txt
 
-rm -rf /scratch_sata_output/raqueld/$PBS_JOBID
+	ndup=$(wc -l $name.list_multi_a_markers.txt | awk '{print $1}')
+	if [ "$ndup" -ge 1 ]; then
+		echo "Still found duplicate variant ids or multiallelic markers after filtering. Performing additional filtering."
+		dupflag=$(echo -e "--exclude $name.list_multi_a_markers.txt")
+	else
+		dupflag=""
+	fi
+
+plink --bfile $name.lifted_$liftname.sorted.with_dup $dupflag --make-bed --allow-extra-chr --out $name.lifted_$liftname
+
+rm $name.lifted_$liftname.sorted.*
+rm $name.list_multi_a_markers.txt
+rm $name.sorted.bi.*
+
+#rm -rf /scratch_sata_output/raqueld/$PBS_JOBID
 
 convendtime=$(date +%s)
 
