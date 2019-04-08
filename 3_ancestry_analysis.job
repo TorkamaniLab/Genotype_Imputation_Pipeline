@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=16
-#PBS -l mem=12gb
+#PBS -l mem=32gb
 #PBS -q stsi
 #PBS -l walltime=340:00:00
 #PBS -j oe
@@ -64,7 +64,8 @@ bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz --threads
 tabix -f -p vcf $inprefix.pruned.intersect1KG.vcf.gz
 
 echo "Converting intersection to bed format"
-plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --double-id --make-bed --out $inprefix.pruned.intersect1KG
+#plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --double-id --make-bed --out $inprefix.pruned.intersect1KG
+plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --make-bed --out $inprefix.pruned.intersect1KG
 
 
 echo "Generating population file for admixture"
@@ -95,14 +96,14 @@ poststarttime=$(date +%s)
 
 echo "Splitting subjects by ancestry..."
 
-cat $inprefix.pruned.intersect1KG.fam > $inprefix.pruned.intersect1KG.subjectIDs
+cat $inprefix.pruned.intersect1KG.fam | awk '{print $1 "_" $2}' > $inprefix.pruned.intersect1KG.subjectIDs
 
 paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
 
 #vcf-query -l $inprefix.pruned.vcf.gz > $inprefix.pruned.subjectIDs
 
 echo "Converting input to bed format"
-plink --vcf $myinput --keep-allele-order --double-id --make-bed --out $inprefix
+plink --vcf $myinput --keep-allele-order --make-bed --out $inprefix
 
 cat $inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
 
@@ -137,4 +138,5 @@ postruntime=$((postendtime-poststarttime))
 echo "Preprocessing run time: $vcfruntime"
 echo "Admixture run time: $admruntime"
 echo "Postprocessing run time: $postruntime"
+
 
