@@ -76,13 +76,19 @@ plinkendtime=$(date +%s)
 
 
 #Added by Shaun's request
-cat $inprefix.chr*.irem > $inprefix.irem for i in {2..23}; do
+cat $inprefix.chr*.irem > $inprefix.irem 
+for i in {2..23}; do
     if [ -f $outname.chr$i.bed ]; then
         echo $outname.chr$i >> $inprefix.chrlist
-    fi done echo "Merging all chromosomes..."
+    fi 
+done 
+
+echo "Merging all chromosomes..."
 plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
 
-
+if [ -f $inprefix.chrlist ]; then 
+   rm $inprefix.chrlist
+fi
 
 echo "Ready for next step, results ready for phasing are in $myoutdir/$outsubdir"
 
@@ -99,5 +105,8 @@ echo "Overall run time: $overallruntime"
 
 
 
+
+
+parallel -j 16 PLINK_FUN ::: {1..23}
 
 
