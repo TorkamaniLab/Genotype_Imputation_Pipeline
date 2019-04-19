@@ -73,6 +73,17 @@ plinkstarttime=$(date +%s)
 	parallel -j 16 PLINK_FUN ::: {1..23}
 plinkendtime=$(date +%s)
 
+
+
+#Added by Shaun's request
+cat $inprefix.chr*.irem > $inprefix.irem for i in {2..23}; do
+    if [ -f $outname.chr$i.bed ]; then
+        echo $outname.chr$i >> $inprefix.chrlist
+    fi done echo "Merging all chromosomes..."
+plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
+
+
+
 echo "Ready for next step, results ready for phasing are in $myoutdir/$outsubdir"
 
 endtime=$(date +%s)
@@ -82,3 +93,11 @@ overallruntime=$((endtime-starttime))
 
 echo "plink run time: $plinkruntime"
 echo "Overall run time: $overallruntime"
+
+
+
+
+
+
+
+
