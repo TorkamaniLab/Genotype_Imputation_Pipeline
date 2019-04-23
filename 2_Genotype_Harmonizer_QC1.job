@@ -68,14 +68,18 @@ GH_FUN () {
 
 export -f GH_FUN
 
-plinkstarttime=$(date +%s)
-	parallel -j 16 PLINK_FUN ::: {1..23}
-plinkendtime=$(date +%s)
 
+echo "Extracting chromosomes..."
+plinkstarttime=$(date +%s)
+	parallel -j 8 PLINK_FUN ::: {1..23}
+plinkendtime=$(date +%s)
+echo "Done extracting chromosomes."
+
+echo "Running GH..."
 GHstarttime=$(date +%s)
 	parallel -j 8 GH_FUN ::: {1..23}
 GHendtime=$(date +%s)
-
+echo "GH done."
 
 
 if [ -f $inprefix.chrlist ]; then 

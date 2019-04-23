@@ -78,7 +78,7 @@ plinkendtime=$(date +%s)
 #Added by Shaun's request
 cat $inprefix.chr*.irem > $inprefix.irem 
 for i in {2..23}; do
-    if [ -f $outname.chr$i.bed ]; then
+    if [ -f $inprefix.chr$i.bed ]; then
         echo $outname.chr$i >> $inprefix.chrlist
     fi 
 done 

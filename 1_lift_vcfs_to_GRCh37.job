@@ -68,9 +68,9 @@ if [ $checknone -eq 1 ]; then
      plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --make-bed --out $name.lifted_already_GRCh37
  
 
-     rm $name.sorted.bi.*
-     rm $name.lifted_already_GRCh37.sorted.*
-     rm $name.list_multi_a_markers.txt
+#     rm $name.sorted.bi.*
+#     rm $name.lifted_already_GRCh37.sorted.*
+#     rm $name.list_multi_a_markers.txt
 
      convendtime=$(date +%s)
 
