@@ -79,7 +79,7 @@ plinkendtime=$(date +%s)
 cat $inprefix.chr*.irem > $inprefix.irem 
 for i in {2..23}; do
     if [ -f $inprefix.chr$i.bed ]; then
-        echo $outname.chr$i >> $inprefix.chrlist
+        echo $inprefix.chr$i >> $inprefix.chrlist
     fi 
 done 
 
@@ -99,14 +99,3 @@ overallruntime=$((endtime-starttime))
 
 echo "plink run time: $plinkruntime"
 echo "Overall run time: $overallruntime"
-
-
-
-
-
-
-
-
-parallel -j 16 PLINK_FUN ::: {1..23}
-
-

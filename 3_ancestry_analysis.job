@@ -57,7 +57,7 @@ rm $inprefix.pruned.recode.vcf
 tabix -p vcf $inprefix.pruned.vcf.gz
 
 echo "Generating intersection between input data and reference panel for ancestry"
-bcftools isec $inprefix.pruned.vcf.gz /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 --threads 16 -Oz
+bcftools isec $inprefix.pruned.vcf.gz /stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 --threads 16 -Oz
 
 bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz --threads 16 -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
 
@@ -81,7 +81,7 @@ for i in $(seq 1 1 $inputN); do
      echo >> $inprefix.pruned.intersect1KG.pop
 done
 
-cat /stsi/raqueld/ref/ancestry/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
+cat /gpfs/group/torkamani/raqueld/ancestry/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
 
 vcfendtime=$(date +%s)
 

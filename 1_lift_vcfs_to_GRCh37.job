@@ -29,6 +29,10 @@ export TMPDIR=/scratch_sata_output/raqueld/$PBS_JOBID
 
 filename=$(basename $myinput)
 
+if [ ! -d $myoutdir ]; then
+	mkdir -p $myoutdir
+fi
+
 cd $myoutdir
 
 name=$(echo $filename | sed -e 's/\.vcf$//g' | sed -e 's/\.vcf.gz$//g')
