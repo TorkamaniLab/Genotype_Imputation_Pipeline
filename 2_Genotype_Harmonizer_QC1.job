@@ -116,17 +116,18 @@ rm $outname.m.bed $outname.m.bim $outname.m.fam
 
 #echo "Doing last check for allele swaps"
 #bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f /stsi1/raqueld/1000G/human_g1k_v37.fasta -m top -d
+bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f /stsi1/raqueld/1000G/human_g1k_v37.fasta -m flip -d
 
-#tabix -p vcf $outname.1.vcf.gz
-#rm $outname.0.vcf.gz
+tabix -p vcf $outname.1.vcf.gz
+rm $outname.0.vcf.gz
 
-bcftools view -Ou -c 2 $outname.0.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
-#bcftools view -Ou -c 2 $outname.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
+#bcftools view -Ou -c 2 $outname.0.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
+bcftools view -Ou -c 2 $outname.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
 
 tabix -p vcf $outname.vcf.gz
 
-#rm $outname.1.vcf.gz
-rm $outname.0.vcf.gz
+rm $outname.1.vcf.gz
+#rm $outname.0.vcf.gz
 
 
 
