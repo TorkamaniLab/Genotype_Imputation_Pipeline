@@ -109,24 +109,26 @@ echo "Merging all chromosomes..."
 plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
 
 #RR moving fix ref and introducing remove duplicates
-plink --bfile $outname.m --recode vcf bgz --double-id --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
+#DISCOVERED THAT --keep-allele-order IS NOT WORKING, DISABLING ALLELE ORDER CHANGE BY FORCE!!!!!!
+plink --bfile $outname.m --recode vcf bgz --a1-allele $outname.m.bim 6 1 --double-id --set-missing-var-ids @:#\$1:\$2 --out $outname.0
+#plink --bfile $outname.m --recode vcf bgz --double-id --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
 
 tabix -p vcf $outname.0.vcf.gz
-rm $outname.m.bed $outname.m.bim $outname.m.fam
+#rm $outname.m.bed $outname.m.bim $outname.m.fam
 
 #echo "Doing last check for allele swaps"
 #bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f /stsi1/raqueld/1000G/human_g1k_v37.fasta -m top -d
 bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f /stsi1/raqueld/1000G/human_g1k_v37.fasta -m flip -d
 
 tabix -p vcf $outname.1.vcf.gz
-rm $outname.0.vcf.gz
+#rm $outname.0.vcf.gz
 
 #bcftools view -Ou -c 2 $outname.0.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
 bcftools view -Ou -c 2 $outname.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
 
 tabix -p vcf $outname.vcf.gz
 
-rm $outname.1.vcf.gz
+#rm $outname.1.vcf.gz
 #rm $outname.0.vcf.gz
 
 

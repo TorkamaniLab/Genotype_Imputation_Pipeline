@@ -29,6 +29,12 @@ if [ ! -f $check_vcf_build ]; then
 	exit
 fi
 
+#check if output directory exists
+myoutdir=$(dirname $myoutput)
+if [ ! -d $myoutdir ]; then
+	mkdir -p $myoutdir
+fi
+
 gzstarttime=$(date +%s)
 
 newname=$filename

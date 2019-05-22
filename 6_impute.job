@@ -38,10 +38,10 @@ cd $myoutdir/$outsubdir
 
 if [ "$reftype" == "HRC" ]; then
         echo "Using HRC reference panel, file: /stsi/raqueld/EGA/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz"
-        myref=/stsi/raqueld/EGA/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
+        myref=/stsi1/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
 else
     	echo "Using 1KG reference, file: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
-        myref=/gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
+        myref=/stsi1/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz
 fi
 
 echo "Running Imputation"
@@ -49,4 +49,5 @@ $imputationSoftware --refHaps $myref \
          --haps $myinput \
          --prefix imputed_$mychr \
          --ignoreDuplicates \
-         --minRatio 0.01 --ChunkLengthMb 30.00 --ChunkOverlapMb 6.00 --cpus 16
+         --minRatio 0.01 --ChunkLengthMb 30.00 --ChunkOverlapMb 3.00 --cpus 16
+#         --minRatio 0.01 --ChunkLengthMb 0.50 --ChunkOverlapMb 0.05 --cpus 16
