@@ -56,7 +56,10 @@ fi
 
 plinkstarttime=$(date +%s)
 
-plink --bfile $indir/$inprefix --recode vcf bgz --keep-allele-order --out $inprefix
+#FIXING STUPID BROKEN KEEP-ALLELE-ORDER
+#plink --bfile $indir/$inprefix --recode vcf bgz --keep-allele-order --out $inprefix
+plink --bfile  $indir/$inprefix --recode vcf bgz --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --out $inprefix
+
 tabix -f -p vcf $inprefix.vcf.gz
 
 plinkendtime=$(date +%s)

@@ -56,13 +56,15 @@ else
 	export genoflag=$(echo "--geno $geno" | tr -d '\n'); 
 fi
 
+
+
 #export SHELL=$(type -p bash)
 PLINK_FUN() {
 
 	if [ "$1" -eq 23 ]; then
-		plink --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
 	else
-		plink --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
 	
 	fi
 
@@ -83,8 +85,11 @@ for i in {2..23}; do
     fi 
 done 
 
+
 echo "Merging all chromosomes..."
-plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
+#FIXING STUPID BUG WITH keep-allele-order
+#plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
+plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --a1-allele $indir/$inprefix.bim 5 2 --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
 
 if [ -f $inprefix.chrlist ]; then 
    rm $inprefix.chrlist

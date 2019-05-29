@@ -39,10 +39,14 @@ name=$(echo $filename | sed -e 's/\.vcf$//g' | sed -e 's/\.vcf.gz$//g')
 
 vcfstarttime=$(date +%s)
 echo "Converting vcf to ped/map.."
-#vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --biallelic-only strict --double-id --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
-vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
+#vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
+#FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\n' $myinput > $filename.pos
+vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --a1-allele $filename.pos 5 3 --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
 
-plink --bfile $name.sorted.bi --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
+#FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+#plink --bfile $name.sorted.bi --recode --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
+plink --bfile $name.sorted.bi --recode --a1-allele $name.sorted.bi.bim 5 2 --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
 
 vcfendtime=$(date +%s)
 
@@ -60,7 +64,10 @@ if [ $checknone -eq 1 ]; then
      #vcf-sort $myinput | bcftools view /dev/stdin -M 2 -m 2 | bcftools norm /dev/stdin -d both | plink --vcf /dev/stdin --make-bed --keep-allele-order --double-id --allow-extra-chr --biallelic-only strict --vcf-half-call missing --out $name.lifted_already_GRCh37.sorted.bi
      #plink --bfile $name.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37
      #Try this if the line above fails
-     plink --bfile $name.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37.sorted.with_dup
+     #FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+     #plink --bfile $name.sorted.bi --make-bed --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37.sorted.with_dup
+     plink --bfile $name.sorted.bi --make-bed $name.sorted.bi.bim 5 2 --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --out $name.lifted_already_GRCh37.sorted.with_dup
+
      cut -f 2 $name.lifted_already_GRCh37.sorted.with_dup.bim | sort | uniq -d > $name.list_multi_a_markers.txt
 	ndup=$(wc -l $name.list_multi_a_markers.txt | awk '{print $1}')
 	if [ "$ndup" -ge 1 ]; then
@@ -69,7 +76,9 @@ if [ $checknone -eq 1 ]; then
 	else
 		dupflag=""
 	fi
-     plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --make-bed --out $name.lifted_already_GRCh37
+     #plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --make-bed --out $name.lifted_already_GRCh37
+     #FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+     plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --a1-allele $name.sorted.bi.bim 5 2 --make-bed --out $name.lifted_already_GRCh37
  
 
 #     rm $name.sorted.bi.*
@@ -126,10 +135,15 @@ liftendtime=$(date +%s)
 convstarttime=$(date +%s)
 
 echo "Converting lifted output $name.lifted_$liftname to bed/bim/fam.."
-plink --file $name.lifted_$liftname --keep-allele-order --double-id --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted
+#plink --file $name.lifted_$liftname --keep-allele-order --double-id --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted
+#FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+plink --file $name.lifted_$liftname --a1-allele $name.sorted.bi.bim 5 2 --double-id --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted
+
 #plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname
 #Try this if the line above fails
-plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted.with_dup
+#FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+#plink --bfile $name.lifted_$liftname.sorted --keep-allele-order --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted.with_dup
+plink --bfile $name.lifted_$liftname.sorted --a1-allele $name.sorted.bi.bim 5 2 --double-id --set-missing-var-ids @:#:\$1:\$2 --allow-extra-chr --make-bed --out $name.lifted_$liftname.sorted.with_dup
 cut -f 2 $name.lifted_$liftname.sorted.with_dup.bim | sort | uniq -d > $name.list_multi_a_markers.txt
 
 	ndup=$(wc -l $name.list_multi_a_markers.txt | awk '{print $1}')
@@ -140,7 +154,9 @@ cut -f 2 $name.lifted_$liftname.sorted.with_dup.bim | sort | uniq -d > $name.lis
 		dupflag=""
 	fi
 
-plink --bfile $name.lifted_$liftname.sorted.with_dup $dupflag --make-bed --allow-extra-chr --out $name.lifted_$liftname
+#FIXING STUPID PROBLEM WITH BUG IN --keep-ellele-order
+#plink --bfile $name.lifted_$liftname.sorted.with_dup $dupflag --make-bed --allow-extra-chr --out $name.lifted_$liftname
+plink --bfile $name.lifted_$liftname.sorted.with_dup $dupflag --make-bed --a1-allele $name.sorted.bi.bim 5 2 --allow-extra-chr --out $name.lifted_$liftname
 
 rm $name.lifted_$liftname.sorted.*
 rm $name.list_multi_a_markers.txt

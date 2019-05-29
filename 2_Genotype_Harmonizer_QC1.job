@@ -48,10 +48,10 @@ export outname=$(basename $myinput | sed -e 's/\.bed$/\.GH/g')
 PLINK_FUN() {
 
 	if [ "$1" -eq 23 ]; then
-		plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --biallelic-only --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
 		#plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --chr $1,X --recode vcf bgz --out $inprefix.chr$1
 	else
-		plink --bfile $indir/$inprefix --biallelic-only --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
+		plink --bfile $indir/$inprefix --biallelic-only --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
 	
 	fi
 
@@ -106,11 +106,13 @@ for i in {2..23}; do
 done
 
 echo "Merging all chromosomes..."
-plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
+#FIXING STUPID BUG WITH  --keep-allele-order
+#plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --keep-allele-order --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
+plink --bfile $outname.chr1 --merge-list $inprefix.chrlist --allow-extra-chr --a1-allele $indir/$inprefix.bim 5 2  --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out ./$outname.m
 
 #RR moving fix ref and introducing remove duplicates
 #DISCOVERED THAT --keep-allele-order IS NOT WORKING, DISABLING ALLELE ORDER CHANGE BY FORCE!!!!!!
-plink --bfile $outname.m --recode vcf bgz --a1-allele $outname.m.bim 6 1 --double-id --set-missing-var-ids @:#\$1:\$2 --out $outname.0
+plink --bfile $outname.m --recode vcf bgz --a1-allele $outname.m.bim 5 2 --double-id --set-missing-var-ids @:#\$1:\$2 --out $outname.0
 #plink --bfile $outname.m --recode vcf bgz --double-id --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $outname.0
 
 tabix -p vcf $outname.0.vcf.gz
