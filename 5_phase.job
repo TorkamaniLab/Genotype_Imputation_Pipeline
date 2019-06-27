@@ -29,11 +29,11 @@ module load plink2
 
 starttime=$(date +%s)
 
-eagle=/gpfs/home/raqueld/bin/Eagle_v2.4/eagle
+eagle=/gpfs/home/sfchen/bin/Eagle_v2.4.1/eagle
 inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 indir=$(dirname $myinput)
 mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
-mymap=/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz
+mymap=/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz
 
 echo "Chromosome $mychr"
 echo "Input prefix $inprefix"
@@ -47,10 +47,10 @@ fi
 cd $myoutdir/$outsubdir
 
 if [ "$reftype" == "HRC" ]; then
-	myref=/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.bcf
+	myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.bcf
 	echo "Using HRC reference panel, file: $myref"
 else
-	myref=/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bcf
+	myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bcf
 	echo "Using 1KG reference, file: $myref"
 fi
 
