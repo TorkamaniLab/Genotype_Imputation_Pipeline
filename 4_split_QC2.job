@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=16
 #PBS -l mem=32gb
-#PBS -q sata 
+#PBS -q stsi
 #PBS -l walltime=540:00:00
 #PBS -j oe
 

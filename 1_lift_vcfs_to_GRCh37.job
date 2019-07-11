@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=1
 #PBS -l mem=8gb
-#PBS -q sata 
+#PBS -q stsi
 #PBS -l walltime=340:00:00
 #PBS -j oe
 
@@ -13,8 +13,6 @@ module load ucsc_tools/373
 module load vcftools
 module load samtools
 
-mkdir -p /scratch_sata_output/raqueld/$PBS_JOBID
-export TMPDIR=/scratch_sata_output/raqueld/$PBS_JOBID
 
 #Examples of the variables needed (-v)
 #myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
@@ -161,8 +159,6 @@ plink --bfile $name.lifted_$liftname.sorted.with_dup $dupflag --make-bed --a1-al
 rm $name.lifted_$liftname.sorted.*
 rm $name.list_multi_a_markers.txt
 rm $name.sorted.bi.*
-
-#rm -rf /scratch_sata_output/raqueld/$PBS_JOBID
 
 convendtime=$(date +%s)
 
