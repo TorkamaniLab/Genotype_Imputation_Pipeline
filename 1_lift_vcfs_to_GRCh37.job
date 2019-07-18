@@ -23,7 +23,9 @@ module load samtools
 #qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,myoutdir=/stsi/raqueld/1_lift,custom_temp=/mnt/stsi/stsi0/raqueld/tmp -N 1_6800_JHS_all_chr_sampleID_c2
 
 #path to program
-#$HOME/lift/LiftMap.py
+lift=$HOME/required_tools/lift/LiftMap.py
+cpath=$HOME/required_tools/chainfiles
+
 
 if [ ! -z custom_temp ]; do
     mkdir -p $custom_temp/$PBS_JOBID
@@ -90,27 +92,12 @@ if [ $checknone -eq 1 ]; then
 
      convendtime=$(date +%s)
 
-     copystarttime=$(date +%s)
-
-     if [ "$copyoutput" == "yes" ]; then
-     
-     echo "copying results to /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift"
-     cp $name.lifted_already_GRCh37* /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift/
-
-     fi
-
-     copyendtime=$(date +%s)
-
-
 	vcfruntime=$((vcfendtime-vcfstarttime))
 	convruntime=$((convendtime-convstarttime))
-	copyruntime=$((copyendtime-copystarttime))
 
 	echo "vcf convert time: $vcfruntime"
 	echo "liftover run time: Not needed to run"
 	echo "output convertion run time: $convruntime"
-	echo "copy run time: $copyruntime"
-     
 
      exit
 fi
@@ -122,16 +109,16 @@ echo "Lifting ped/map using chain file(s): $cfilename..."
 
 if [ "$nchains" -eq 1 ]; then
      liftname=$(echo $cfilename |  sed -e 's/\.chain.*//g')
-     $HOME/lift/LiftMap.py -p $name.ped -m $name.map -c $HOME/chainfiles/$cfilename -o $name.lifted_$liftname
+     $lift -p $name.ped -m $name.map -c $cpath/$cfilename -o $name.lifted_$liftname
 
 fi
 if [ "$nchains" -eq 2 ]; then
      first=$(echo $cfilename | tr ' ' '\n' | head -n 1)
      second=$(echo $cfilename | tr ' ' '\n' | tail -n 1)
      liftname=$(echo $first |  sed -e 's/\.chain.*//g')
-     $HOME/lift/LiftMap.py -m $name.map -c $HOME/chainfiles/$first -o $name.lifted_$liftname
+     $lift -m $name.map -c $cpath/$first -o $name.lifted_$liftname
      liftname=$(echo $second |  sed -e 's/\.chain.*//g')
-     $HOME/lift/LiftMap.py -m $name.lifted_$liftname.map -c $HOME/chainfiles/$second -o $name.lifted_$liftname
+     $lift -m $name.lifted_$liftname.map -c $cpath/$second -o $name.lifted_$liftname
 fi
 liftendtime=$(date +%s)
 
@@ -167,23 +154,10 @@ rm $name.sorted.bi.*
 
 convendtime=$(date +%s)
 
-copystarttime=$(date +%s)
-
-if [ "$copyoutput" == "yes" ]; then
-	echo "copying results to /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift"
-	cp $name.lifted_$liftname* /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/1_lift/
-fi
-
-copyendtime=$(date +%s)
-
-rm -rf /mnt/stsi/stsi0/raqueld/tmp/$PBS_JOBID
-
 vcfruntime=$((vcfendtime-vcfstarttime))
 liftruntime=$((liftendtime-liftstarttime))
 convruntime=$((convendtime-convstarttime))
-copyruntime=$((copyendtime-copystarttime))
 
 echo "vcf convert time: $vcfruntime"
 echo "liftover run time: $liftruntime"
 echo "output convertion run time: $convruntime"
-echo "copy run time: $copyruntime"

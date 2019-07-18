@@ -22,7 +22,7 @@ filename=$(basename $myinput)
 echo "Running vcf build check"
 
 #change this path to your own path where check_vcf_build.R is located
-check_vcf_build=$HOME/check_vcf_build/check_vcf_build.R
+check_vcf_build=$HOME/required_tools/check_vcf_build/check_vcf_build.R
 
 if [ ! -f $check_vcf_build ]; then
 	echo "check_vcf_build.R not found. Make sure you downloaded check_vcf_build.R and changed the check_vcf_build variable inside this job script, so it matches to the path where your check_vcf_build.R if located."
