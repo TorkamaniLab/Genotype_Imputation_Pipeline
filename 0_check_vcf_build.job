@@ -13,7 +13,7 @@ module load R
 #myinput example: /stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
 #myoutput example: /stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked
 #How to run Example
-#qsub 0_check_vcf_build.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,copyoutput=yes,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2
+#qsub 0_check_vcf_build.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2
 
 mydirname=$(dirname $myinput)
 
@@ -22,7 +22,7 @@ filename=$(basename $myinput)
 echo "Running vcf build check"
 
 #change this path to your own path where check_vcf_build.R is located
-check_vcf_build=/gpfs/home/raqueld/check_vcf_build/check_vcf_build.R
+check_vcf_build=$HOME/check_vcf_build/check_vcf_build.R
 
 if [ ! -f $check_vcf_build ]; then
 	echo "check_vcf_build.R not found. Make sure you downloaded check_vcf_build.R and changed the check_vcf_build variable inside this job script, so it matches to the path where your check_vcf_build.R if located."
@@ -54,23 +54,9 @@ Rscript $check_vcf_build $mydirname/$newname > $myoutput
 
 vcfendtime=$(date +%s)
 
-copystarttime=$(date +%s)
-
-#set this to your own path in the shared storage in case you want to copy the results
-if [ "$copyoutput" == "yes" ]; then
-
-	echo "copying results to /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/0_check_vcf_build"
-	cp $myoutput /mnt/stsi/p1/wellderly/dbGaP/Raquel_WIP/final_pipeline/0_check_vcf_build/
-
-fi
-
-copyendtime=$(date +%s)
-
 vcfruntime=$((vcfendtime-vcfstarttime))
 gzruntime=$((gzendtime-gzstarttime))
-copyruntime=$((copyendtime-copystarttime))
 
 echo "vcf check run time: $vcfruntime"
 echo "Extract run time: $gzruntime"
-echo "Copy run time: $copyruntime"
 
