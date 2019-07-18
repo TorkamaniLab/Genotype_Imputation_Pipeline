@@ -1,95 +1,91 @@
 # Genotype_Imputation_Pipeline
->Final version of the pipeline for processing TOPMED and other dbGaP datasets, includes:  
->> automatic identification of reference genome build and selection of correct chain file, mapping to GRCh37 reference build, initial quality control, ancestry analysis, post-ancestry quality control, phasing, imputation, post-imputation quality control.
+A tool for imputation of genotype array datasets from dbGaP. The Genotype Imputation Pipeline consists of the following steps:
+
+0. Identify input genome build version outomatically
+1. Lift the input to build GRCh37 (hg19)
+2. Quality control 1: LD-based fix of strand flips, fix strand swaps, filter variants by missingness 
+3. Split samples by ancestry
+4. Quality control 2: filter samples by missingness, filter variants by HWE
+5. Phase
+6. Impute
   
-  
+
 ## Dependencies
+The pipeline was tested in garibaldi using the following required software and packages:
 
-__This pipeline ONLY worked on Garibaldi for now__  
+- R v3.5.1
+- vcftools v0.1.14
+- plink v1.9
+- samtools v1.9
+- GenotypeHarmonizer v1.4.20
+- ADMIXTURE
+- Eagle v2.4
+- Minimac4
+- liftOver
 
-```module load vcftools```  
-```module load plink2/1.90b3.42```  
-```module load samtools/1.9```  
-```module load R```  
+If you are in garibaldi, you don't need to install these packages, and tools, they are either loaded by the job script, or executed from the required_tools directory included in this repository (see bellow).
 
+## How to run
 
+Before starting the pipeline, modify copy the contends of the required_tools folder into your home folder in garibaldi:
 
-## How to run the pipeline
-## *::Data cleaning::*
+```
+cp -r required_tools $HOME/
+```
+
+After copying the required tools, please read the following instructions on how to run the steps 0-6 manually (automated metod comming soon!).
+
 ### Step 0: Check genome build and select chain file
 
-__Prerequisite__  
-
-- [x] `~/check_vcf_build/check_vcf_build.R`  
-    * copied from `/gpfs/home/raqueld/check_vcf_build`
-
-__Usage example__ 
- 
-```ruby
-qsub 0_check_vcf_build.job -v  myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,myoutput=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,copyoutput=yes,gz=yes -N 0_6800_JHS_all_chr_sampleID_c2
+```
+qsub 0_check_vcf_build.job -v  myinput=/path/to/vcf/genotype_array.vcf,myoutput=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,gz=yes
 ```
 
-* myinput=`/path/vcf/filename.vcf`  
-* myouput=`/0_check_vcf_build/filename.BuildChecked`  
-* copyoutput=`yes`or`no`  
-    * to save in p1 storage  
-* gz=`yes`or`no`  
-    * to compress  
+Where:
+- myinput is the full path to the input genotype array dataset in either vcf or vcf.gz format
+- myoutput is the full path to save the output of this step
+- gz (gz=yes or gz=no) is whether the input file is either vcf or vcf.gz format
 
+The output file will have the sufix *.BuildChecked
 
-### Step 1: Lifeover to GRCh37
-> This step will liftover the input to GRCh37 according the `.BuildChecked` file to pick chain file.
+### Step 1: Lifeover input genotype array to GRCh37 build
+This step will lift the input to GRCh37 build using the *.BuildChecked file generated in the previous steo to select the correct chain file.
 
-__Prerequisite__  
-
-- [x] `~/bin/LiftMap.py`
-    * copied from `/gpfs/home/raqueld/bin`
-- [x] `~/chainfiles/*.chain`
-    * copied from `/gpfs/home/raqueld/chainfiles/*.chain`
-    
-__Usage example__ 
- 
-```ruby
-qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,myoutdir=/stsi/raqueld/1_lift,copyoutput=yes -N 1_6800_JHS_all_chr_sampleID_c2
+```
+qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/path/to/vcf/genotype_array.vcf,buildcheck=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,myoutdir=/path/to/output/1_lift,custom_temp=/my/temp/path/tmp
 ```
 
-* myinput=`/path/vcf/filename.vcf`
-* buildcheck=`/path/0_check_vcf_build/filename.BuildChecked`
-* myoutdir=`/path/1_lift`
-* copyoutput=`yes`or`no`
-    * to save in p1 storage
+Where:
+- myinput is the same input file as step 0 (use full path)
+- buildcheck is the full path to *.BuildChecked file generated in previous step
+- myoutdir is path to the output folder (no file name should be used, just output folder name)
+- custom_temp (optional) set a different path to be used as temporary directory, recommended in case your input file is too large (more than 100GB).
+
+The output file will have the suffix *.lifted_[old_build]_to_GRCh37.bed
 
 
-### Step 2: Gene Hormonizer and 1st quality control
-> The input file will be split by chromosome for parallel hormonization and to fix REF/ALT swap.
+### Step 2: LD-based fix of strand flips, fix strand swaps and mismatching alleles, and initial quality control (90% missingnes per variant)
 
-__Prerequisite__
-
-- [x] `~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar`
-    * copied from `/gpfs/home/raqueld/bin`
-- [x] `/gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz`
-
-__Usage example__
-
-```ruby
-qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
 ```
-* myinput=`/path/vcf/inprefix.vcf`   
-* myoutdir=`/path/2_GH`
-    * `inprefix.GH.bed/fam/bim`
+qsub 2_Genotype_Harmonizer.job -v myinput=/path/to/output/1_lift/genotype_array.lifted_NCBI36_to_GRCh37.bed,myoutdir=/path/to/output/2_GH,ref_path=/my/ref/path
+```
 
+Where:
+- myinput is the path to the *.lifted_[old_build]_to_GRCh37.bed file generated by step 1, in the example above the /path/to/vcf/genotype_array.vcf file was lifted to /path/to/output/1_lift/genotype_array.lifted_NCBI36_to_GRCh37.bed becase the input file was generated from NCBI36 reference build version. 
+- myoutdir is path to the output folder (no file name should be used, just output folder name)
+- ref_path (optional) is your custom reference file path (just the folder path containing 1000 Genomes reference, no file name needed). WARNING: before using your custom reference, prepare the reference following this ste-by-step documentation: https://github.com/TorkamaniLab/preprocessing_reference_panels_for_phasing_imputation. If no custom reference path is provided, this will be the default path: /mnt/stsi/stsi0/raqueld/1000G.
 
-### Step 3: Ancestry estimation
+The output files will have the suffix *.lifted_[old_build]_to_GRCh37.GH.bim, *.lifted_[old_build]_to_GRCh37.GH.fam, and *.lifted_[old_build]_to_GRCh37.GH.bed.
+
+### Step 3: Estimate ancestry and split samples by ancestry
 
 __Prerequisite__  
 
 - [x] `/gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz`
-- [x] `~/split_by_ancestry/split_by_ancestry.R`
-    * copied from `/gpfs/home/raqueld/split_by_ancestry`)  
 
 __Usage example__ 
  
-```ruby
+```
 qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
 ```
 * myinput=`/path/2_GH/inprefix.bed`
