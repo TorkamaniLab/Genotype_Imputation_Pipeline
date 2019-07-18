@@ -14,7 +14,7 @@ pwd
 #myoutdir example:
 #/stsi/raqueld/2_GH
 #myinput example:
-#qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA -N 2_N_GH.mesa_genotypes-black
+#qsub 2_Genotype_Harmonizer.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.bed,myoutdir=/gpfs/home/raqueld/mapping_MESA,ref_path=/mnt/stsi/stsi0/raqueld/1000G -N 2_N_GH.mesa_genotypes-black
 
 #Step 2
 #Split genotype file by chromosome
@@ -27,13 +27,18 @@ module load vcftools
 module load samtools/1.9
 module load plink2
 
+GH=$HOME/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar
 
 starttime=$(date +%s)
 
 export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
 
-export ref_path=/mnt/stsi/stsi0/raqueld/1000G
+#change this path to your own reference path
+if [ ! -z ref_path ]; then
+	export ref_path=/mnt/stsi/stsi0/raqueld/1000G
+	echo "No reference path provided, check step 2 instructions in README. Using the following path as default: $ref_path"
+fi
 
 if [ ! -d $myoutdir ]; then
         mkdir -p $myoutdir
@@ -62,12 +67,12 @@ export -f PLINK_FUN
 
 GH_FUN () {
 	if [ "$1" -eq 23 ]; then
-		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
+		java -Xmx16g -jar $GH --keep --input $inprefix.chr$1 \
 		--ref $ref_path/ALL.chrX.phase3_shapeit2_mvncall_integrated_v1b.20130502.genotypes.vcf.gz \
 		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
 
 	else
-		java -Xmx16g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $inprefix.chr$1 \
+		java -Xmx16g -jar $GH --keep --input $inprefix.chr$1 \
 		--ref  $ref_path/ALL.chr$1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz \
 		--inputType PLINK_BED --callRateFilter 0.90 --output ./$outname.chr$1
 	fi
@@ -120,13 +125,11 @@ tabix -p vcf $outname.0.vcf.gz
 #rm $outname.m.bed $outname.m.bim $outname.m.fam
 
 #echo "Doing last check for allele swaps"
-####bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f /stsi1/raqueld/1000G/human_g1k_v37.fasta -m top -d
 bcftools +fixref $outname.0.vcf.gz --threads 16 -Oz -o $outname.1.vcf.gz -- -f $ref_path/human_g1k_v37.fasta -m flip -d
 
 tabix -p vcf $outname.1.vcf.gz
 #rm $outname.0.vcf.gz
 
-####bcftools view -Ou -c 2 $outname.0.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f /stsi1/raqueld/1000G/human_g1k_v37.fasta
 bcftools view -Ou -c 2 $outname.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.vcf.gz -d both -f $ref_path/human_g1k_v37.fasta
 
 tabix -p vcf $outname.vcf.gz
@@ -157,14 +160,6 @@ for i in {1..23}; do
 done
 
 mergeendtime=$(date +%s)
-
-#GHstarttime=$(date +%s)
-
-#java -Xmx32g -jar ~/bin/GenotypeHarmonizer/GenotypeHarmonizer.jar --keep --input $indir/$inprefix \
-#--ref /gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz \
-#--inputType PLINK_BED --output ./$outname
-
-#GHendtime=$(date +%s)
 
 
 #output example
