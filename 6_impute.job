@@ -52,4 +52,6 @@ $imputationSoftware --refHaps $myref \
          --prefix imputed_$mychr \
          --ignoreDuplicates \
          --minRatio 0.01 --ChunkLengthMb 30.00 --ChunkOverlapMb 3.00 --cpus 16
-#         --minRatio 0.01 --ChunkLengthMb 0.50 --ChunkOverlapMb 0.05 --cpus 16
+
+echo "Running tabix"
+tabix -p vcf imputed_$mychr.dose.vcf.gz
