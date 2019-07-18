@@ -27,7 +27,7 @@ If you are in garibaldi, you don't need to install these packages, and tools, th
 
 ## How to run
 
-Before starting the pipeline, modify copy the contends of the required_tools folder into your home folder in garibaldi:
+Before starting the pipeline, copy the contends of the required_tools folder into your home folder in garibaldi:
 
 ```
 cp -r required_tools $HOME/
