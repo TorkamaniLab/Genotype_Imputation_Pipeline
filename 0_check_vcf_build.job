@@ -43,7 +43,7 @@ if [ "$gz" == "yes" ]; then
 	newname=$(echo $filename | sed -e 's/\.gz$//g')	
 	echo "Extracting $filename to $newname"
 	cd $mydirname
-	zcat $filename > $newname
+        bgzip -dc -@ 16 $filename > $newname
 fi
 gzendtime=$(date +%s)
 
