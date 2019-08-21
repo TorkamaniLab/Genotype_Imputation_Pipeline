@@ -27,7 +27,7 @@ lift=$HOME/required_tools/lift/LiftMap.py
 cpath=$HOME/required_tools/chainfiles
 
 
-if [ ! -z custom_temp ]; do
+if [ ! -z custom_temp ]; then
     mkdir -p $custom_temp/$PBS_JOBID
     export TEMP=$custom_temp/$PBS_JOBID
 fi
