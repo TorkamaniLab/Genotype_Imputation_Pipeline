@@ -30,6 +30,9 @@ cpath=$HOME/required_tools/chainfiles
 if [ ! -z custom_temp ]; then
     mkdir -p $custom_temp/$PBS_JOBID
     export TEMP=$custom_temp/$PBS_JOBID
+else
+    mkdir -p $PBSTMPDIR/$PBS_JOBID
+    export TEMP=$PBSTMPDIR/$PBS_JOBID
 fi
 
 filename=$(basename $myinput)
