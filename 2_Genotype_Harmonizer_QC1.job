@@ -27,7 +27,7 @@ module load vcftools
 module load samtools/1.9
 module load plink2
 
-GH=$HOME/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar
+export GH=$HOME/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar
 
 starttime=$(date +%s)
 
