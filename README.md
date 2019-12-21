@@ -103,10 +103,10 @@ qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_samp
 __Prerequisite__  
 N/A  
 __Usage example__ 
-```ruby
+```
 qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/N_tests,hwe='',geno=0.1,mind=0.1 -N 4_N_mesa_genotypes-black
 ```
-```ruby
+```
 qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sampleID_c1/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.ancestry-5.bed,myoutdir=/stsi/raqueld/4_split_QC2,hwe='',geno=0.1,mind=0.1 -N 4_6800_JHS_all_chr_sampleID_c1
 ```
 * myinput=`/path/3_ancestry/inprefix.bed`
@@ -116,11 +116,9 @@ qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sample
 
 
 
-## *::Data Processing::*
-
 ### Step 5: Phasing
 
-```ruby
+```
 qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_genotypes-black.lifted_NCBI36_to_GRCh37.GH.chr1.bed,myoutdir=/stsi/raqueld/5_N_tests,reftype=HRC -N 5_N_mesa_genotypes-black
 ```
 
@@ -129,15 +127,46 @@ qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_geno
 
 ### Step 6: Imputation and post-imputation quality control
 
-```ruby
+```
 qsub 6_impute.job -v myinput=/stsi/raqueld/5_N_tests/mesa_genotypes-white/mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18.phased.vcf.gz,myoutdir=/stsi/raqueld/6_N_tests,reftype=HRC -N 6_mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18
 ```
 > if running this step as stand alone tool, input file must have the suffix .lifted_\*.chr\*.phased.vcf.gz, otherwise the pipeline wont work, if you use the previous step to generate this input file, then it will work fine.
 date
 
+## Running all steps automatically (experimental)
 
+This script will setup job dependencies and submit/monitore all the jobs for all the steps automatically.
+Please note! This method is still in beta/experimental version, please make sure you customize the script before you run this.
 
-## Meta
+```
+bash generate_commands_automatically_from_vcf_path.sh
+Usage:    bash script.sh VCF_PATH OUT_ROOT > LOG
+
+          script.sh    This script
+          VCF_PATH     Full path of the input vcf file to be QCed/imputed
+          OUT_ROOT     Path of the directory where all the output folders will be created
+          LOG          Log report file name
+
+Example:  bash generate_commands_automatically_from_vcf_path.sh /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf /mnt/stsi/stsi0/raqueld > MESA_jobs_c1.txt
+```
+
+Once you ran the script setting the run variable inside the script as run=1, the script will save all the submited job commands and job IDs into a log file that you can use for debugging and locating your results.
+
+```
+head MESA_jobs_c1.txt
+qsub 0_check_vcf_build.job -v myinput=/mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf,myoutput=/mnt/stsi/stsi0/raqueld/0_check_vcf_build/SHARE_MESA_c2_flipfix.BuildChecked,copyoutput=no,gz=no -N 0_SHARE_MESA_c2_flipfix
+4139767.garibaldi01-adm.cluster.net
+qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf,buildcheck=/mnt/stsi/stsi0/raqueld/0_check_vcf_build/SHARE_MESA_c2_flipfix.BuildChecked,myoutdir=/mnt/stsi/stsi0/raqueld/1_lift,copyoutput=no -N 1_SHARE_MESA_c2_flipfix
+4139768.garibaldi01-adm.cluster.net
+qsub 2_Genotype_Harmonizer_QC1.job -v myinput=/mnt/stsi/stsi0/raqueld/1_lift/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.bed,myoutdir=/mnt/stsi/stsi0/raqueld/2_GH -N 2_SHARE_MESA_c2_flipfix
+qsub 3_ancestry_analysis.job -v myinput=/mnt/stsi/stsi0/raqueld/2_GH/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.vcf.gz,myoutdir=/mnt/stsi/stsi0/raqueld/3_ancestry -N 3_SHARE_MESA_c2_flipfix
+qsub 4_split_QC2.job -v myinput=/mnt/stsi/stsi0/raqueld/3_ancestry/SHARE_MESA_c2_flipfix/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.ancestry-1.bed,myoutdir=/mnt/stsi/stsi0/raqueld/4_split_QC2,geno=0.1,mind=0.05 -N 4_SHARE_MESA_c2_flipfix
+4139771.garibaldi01-adm.cluster.net
+qsub 4_split_QC2.job -v myinput=/mnt/stsi/stsi0/raqueld/3_ancestry/SHARE_MESA_c2_flipfix/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.ancestry-2.bed,myoutdir=/mnt/stsi/stsi0/raqueld/4_split_QC2,geno=0.1,mind=0.05 -N 4_SHARE_MESA_c2_flipfix
+4139772.garibaldi01-adm.cluster.net
+```
+
+## Contact information
 
   - Raquel Dias – [@RaquelDiasSRTI](https://twitter.com/RaquelDiasSRTI) – raqueld@scripps.edu  
   - Shaun Chen - [@ShaunFChen](http://twitter.com/ShaunFChen) - sfchen@scripps.edu  
