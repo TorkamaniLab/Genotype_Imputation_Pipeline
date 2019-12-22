@@ -81,7 +81,7 @@ The output files will have the suffix *.lifted_[old_build]_to_GRCh37.GH.bim, *.l
 
 __Prerequisite__  
 
-- [x] `/gpfs/group/torkamani/shaun/1000G_VCF/1000G_Phase3_merged_biallelic_snps_only.vcf.gz`
+- [x] `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
 
 __Usage example__ 
  
