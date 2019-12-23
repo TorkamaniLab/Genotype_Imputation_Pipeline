@@ -29,7 +29,7 @@ module load plink2
 
 starttime=$(date +%s)
 
-eagle=/gpfs/home/raqueld/bin/Eagle_v2.4/eagle
+eagle=/gpfs/home/sfchen/bin/Eagle_v2.4.1/eagle
 inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 indir=$(dirname $myinput)
 mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
