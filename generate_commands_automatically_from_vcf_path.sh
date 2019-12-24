@@ -54,9 +54,6 @@ infile=$(basename ${myinput})
 prefix=$(echo $infile | sed -e 's/\.vcf$//g')
 
 # Assign submission command line
-echo "--------------------"
-echo "Preview command line"
-echo "--------------------"
 job0='qsub 0_check_vcf_build.job -v myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,copyoutput=no,gz=no -N 0_${prefix}'
 job1='qsub 1_lift_vcfs_to_GRCh37.job -v myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,copyoutput=no -N 1_${prefix}'
 job2='qsub 2_Genotype_Harmonizer_QC1.job -v myinput=${outroot}/1_lift/${prefix}.${lifted_code}.bed,myoutdir=${outroot}/2_GH -N 2_${prefix}'
@@ -64,6 +61,17 @@ job3='qsub 3_ancestry_analysis.job -v myinput=${outroot}/2_GH/${prefix}.${lifted
 job4='qsub 4_split_QC2.job -v myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.bed,myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 -N 4_${prefix}'
 job5='qsub 5_phase.job -v myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} -N 5_${prefix}'
 job6='qsub 6_impute.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute,reftype=${ref} -N 6_${prefix}'
+
+echo "--------------------"
+echo "Preview command line"
+echo "--------------------"
+echo $job0
+echo $job1
+echo $job2
+echo $job3
+echo $job4
+echo $job5
+echo $job6
 
 # empty depend step flag by default
 flag=""
