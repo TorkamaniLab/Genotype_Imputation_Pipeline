@@ -151,13 +151,16 @@ job "$job1" "$run" 1 "$start_from" "$stop_after"; echo
 
 # Get lifted status
 lifted_code=$(ls "${outroot}/1_lift/" | grep ${prefix} | grep 'lifted' | head -1 | tr '.' '\n' | grep 'lifted')
-echo "# Lifted status: $lifted_code"; echo
 
 if [ -z $lifted_code ]; then 
     echo
     echo "WARNING: Lifted status is not ready yet, please re-submit step2-6 after step0-1 completed."
+    echo
     exit
 else
+    echo
+    echo "INFO: Lifted status: $lifted_code"; echo
+    
     job "$job2" "$run" 2 "$start_from" "$stop_after"; echo
 
     job "$job3" "$run" 3 "$start_from" "$stop_after"; echo
