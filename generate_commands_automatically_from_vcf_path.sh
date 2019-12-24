@@ -65,13 +65,14 @@ job6='qsub 6_impute.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lift
 echo "--------------------"
 echo "Preview command line"
 echo "--------------------"
-echo $job0
-echo $job1
-echo $job2
-echo $job3
-echo $job4
-echo $job5
-echo $job6
+echo "~$ "$job0
+echo "~$ "$job1
+echo "~$ "$job2
+echo "~$ "$job3
+echo "~$ "$job4
+echo "~$ "$job5
+echo "~$ "$job6
+echo
 
 # empty depend step flag by default
 flag=""
@@ -118,9 +119,9 @@ job() {
             
             # submit the job and save jobID
             job_ID=$($job)
-            echo ${job0_ID}
+            echo ${job_ID}
                         
-            sleep 1
+            sleep 0.5
         fi
         
         # send jobID to flag array (empty is fine for -W)
