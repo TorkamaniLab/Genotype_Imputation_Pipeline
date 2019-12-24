@@ -153,23 +153,28 @@ job "$job1" "$run" 1 "$start_from" "$stop_after"; echo
 lifted_code=$(ls "${outroot}/1_lift/" | grep ${prefix} | grep 'lifted' | head -1 | tr '.' '\n' | grep 'lifted')
 echo "# Lifted status: $lifted_code"; echo
 
-job "$job2" "$run" 2 "$start_from" "$stop_after"; echo
+if [ -z $lifted_code ]; then 
+    echo
+    echo "WARNING: Lifted status is not ready yet, please re-submit step2-6 after step0-1 completed."
+    exit
+else
+    job "$job2" "$run" 2 "$start_from" "$stop_after"; echo
 
-job "$job3" "$run" 3 "$start_from" "$stop_after"; echo
+    job "$job3" "$run" 3 "$start_from" "$stop_after"; echo
 
-for anc in $ancestry; do
-    job "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
-done; echo
+    for anc in $ancestry; do
+        job "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
+    done; echo
 
-for anc in $ancestry; do
-    for chrom in {1..22}; do
-        job "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
-    done
-done; echo
+    for anc in $ancestry; do
+        for chrom in {1..22}; do
+            job "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
+        done
+    done; echo
 
-for anc in $ancestry; do
-    for chrom in {1..22}; do
-        job "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
-    done
-done; echo
-
+    for anc in $ancestry; do
+        for chrom in {1..22}; do
+            job "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
+        done
+    done; echo
+fi
