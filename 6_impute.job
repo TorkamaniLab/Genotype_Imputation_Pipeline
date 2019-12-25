@@ -27,15 +27,18 @@ mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
 
 echo "Chromosome $mychr"
 echo "Input prefix $inprefix"
-outsubdir=$(basename $myinput | sed -e 's/\.lifted.*//g')
+subdir=$(basename $myinput | sed -e 's/\.lifted.*//g')
+subanc=$(basename $myinput | tr '.' '\n' | grep "ancestry")
+outsubdir=$subdir/$subanc
+echo "Working directory: ${myoutdir}/${outsubdir}"
 
 if [ ! -d $myoutdir/$outsubdir ]; then
-        #mkdir -p $myoutdir/$outsubdir
-        mkdir -p $myoutdir
+        mkdir -p $myoutdir/$outsubdir
+        # mkdir -p $myoutdir
 fi
 
-#cd $myoutdir/$outsubdir
-cd $myoutdir
+cd $myoutdir/$outsubdir
+# cd $myoutdir
 
 
 if [ "$reftype" == "HRC" ]; then
