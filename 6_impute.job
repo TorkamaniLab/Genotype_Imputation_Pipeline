@@ -27,23 +27,26 @@ mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
 
 echo "Chromosome $mychr"
 echo "Input prefix $inprefix"
-outsubdir=$(basename $myinput | sed -e 's/\.lifted.*//g')
+subdir=$(basename $myinput | sed -e 's/\.lifted.*//g')
+subanc=$(basename $myinput | tr '.' '\n' | grep "ancestry")
+outsubdir=$subdir/$subanc
+echo "Working directory: ${myoutdir}/${outsubdir}"
 
 if [ ! -d $myoutdir/$outsubdir ]; then
-        #mkdir -p $myoutdir/$outsubdir
-        mkdir -p $myoutdir
+        mkdir -p $myoutdir/$outsubdir
+        # mkdir -p $myoutdir
 fi
 
-#cd $myoutdir/$outsubdir
-cd $myoutdir
+cd $myoutdir/$outsubdir
+# cd $myoutdir
 
 
 if [ "$reftype" == "HRC" ]; then
-        echo "Using HRC reference panel, file: /stsi/raqueld/EGA/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz"
         myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
+        echo "Using HRC reference panel, file: ${myref}"
 else
-    	echo "Using 1KG reference, file: /gpfs/group/torkamani/shaun/1000G_VCF/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz"
         myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz
+        echo "Using 1KG reference panel, file: ${myref}"
 fi
 
 echo "Running Imputation"
