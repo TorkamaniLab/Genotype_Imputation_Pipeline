@@ -17,7 +17,7 @@ echo "myinput $myinput"
 
 module load vcftools
 module load samtools
-module load minimac4
+module load minimac4/1.0.2
 imputationSoftware=minimac4
 
 
