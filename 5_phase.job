@@ -33,8 +33,7 @@ eagle=/gpfs/home/sfchen/bin/Eagle_v2.4.1/eagle
 inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 indir=$(dirname $myinput)
 mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
-# mymap=/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz
-mymap=/gpfs/home/sfchen/bin/Eagle_v2.4.1/tables/genetic_map_hg19_withX.txt.gz
+mymap=/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz
 
 echo "Chromosome $mychr"
 echo "Input prefix $inprefix"
