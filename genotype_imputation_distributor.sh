@@ -123,9 +123,9 @@ if [ "$confirm" == true ]; then run=1; else run=0; fi
 
 
 echo 
-echo "---------------"
-echo "Check arguments"
-echo "---------------"
+echo "---------------------"
+echo "## Check arguments ##"
+echo "---------------------"
 echo "User input:  VCF_PATH: ${myinput}"
 echo "             OUT_ROOT: ${outroot}"
 echo "             CUSTOM_TEMP: ${temp}"
@@ -150,9 +150,9 @@ job4='qsub 4_split_QC2.job -v myinput=${outroot}/3_ancestry/${prefix}/${prefix}.
 job5='qsub 5_phase.job -v myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} -N 5_${prefix}'
 job6='qsub 6_impute.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} -N 6_${prefix}'
 
-echo "--------------------"
-echo "Preview command line"
-echo "--------------------"
+echo "--------------------------"
+echo "## Preview command line ##"
+echo "--------------------------"
 echo "~$ "$job0
 echo "~$ "$job1
 echo "~$ "$job2
@@ -229,9 +229,9 @@ job() {
 ## Main Script ##
 #################
 
-echo "--------------"
-echo "Job submission"
-echo "--------------"
+echo "--------------------"
+echo "## Job submission ##"
+echo "--------------------"
 
 job "$job0" "$run" 0 "$start_from" "$stop_after"; echo
 
