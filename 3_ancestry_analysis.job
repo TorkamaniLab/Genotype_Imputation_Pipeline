@@ -87,7 +87,7 @@ vcfendtime=$(date +%s)
 
 admstarttime=$(date +%s)
 
-	admixture --supervised $inprefix.pruned.intersect1KG.bed 5 -j16
+	admixture --supervised $inprefix.pruned.intersect1KG.bed 5
 
 admendtime=$(date +%s)
 
