@@ -48,8 +48,8 @@ echo "Pruning markers using 0.05 LD threshold"
 if [ $WGS == "yes" ]; then
     echo "Extracting 23andMe positions only for ancestry analysis, for speeding up ancestry analysis. Original positions will be restored later"
     #positions extracted from 190410_snps.23andme.clean.drop_dup.sorted.data
-    bcftools view -R ~/required_tools/chr_pos_23andme.txt $myinput -Ov -o ${myinput}.23andMe_pos.vcf.gz
-    plink --vcf ${myinput}.23andMe_pos --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+    bcftools view -R ~/required_tools/chr_pos_23andme.txt $myinput -Ov -o ${inprefix}.23andMe_pos.vcf.gz
+    plink --vcf ${inprefix}.23andMe_pos.vcf.gz --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 else
     plink --vcf $myinput --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 fi    
