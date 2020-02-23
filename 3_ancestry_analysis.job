@@ -52,7 +52,7 @@ if [ $WGS == "yes" ]; then
     plink --vcf ${myinput}.23andMe_pos --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
 else
     plink --vcf $myinput --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
-    
+fi    
 
 #RR working directly with VCF file now
 #plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $inprefix.pruned
