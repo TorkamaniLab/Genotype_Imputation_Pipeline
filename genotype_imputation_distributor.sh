@@ -19,9 +19,10 @@ for elem in "${args[@]}"     # Array as list
 do
     case "${elem}" in
         ### START Long options:
-        "--confirm")     rawOptions[$pos]="-c" ;;
-        "--start")  rawOptions[$pos]="-s" ;;
-        "--end")  rawOptions[$pos]="-n" ;;
+        "--confirm")    rawOptions[$pos]="-c" ;;
+        "--wgs")    rawOptions[$pos]="-w" ;;
+        "--start")   rawOptions[$pos]="-s" ;;
+        "--end")   rawOptions[$pos]="-n" ;;
         "--vcf")   rawOptions[$pos]="-v" ;;
         "--out")   rawOptions[$pos]="-o" ;;
         "--ref")   rawOptions[$pos]="-r" ;;
@@ -47,13 +48,14 @@ then
     echo "${rawOptions[@]}"
 fi
 
-while getopts "cs:n:v:o:r:t::" option "${rawOptions[@]}"
+while getopts "cws:n:v:o:r:t::" option "${rawOptions[@]}"
 ### END Option Descriptor
 do
     case "$option" in
 
         ### START: Option variables
-        "c")  confirm=true          ;;
+        "c")  confirm=true  ;;
+        "w")  wgs=true  ;;
         "s")  start_from=${OPTARG}  ;;
         "n")  stop_after=${OPTARG}  ;;
         "v")  myinput="${OPTARG}" ;;
@@ -95,17 +97,18 @@ echo
 echo -e "Usage:    bash script.sh --vcf --out --ref --start --end (--confirm) > LOG"
 echo
 echo -e "          script.sh      This script"
-echo -e "          --vcf -v       Full path of the input vcf file to be QCed/imputed"
-echo -e "          --out -o       Path of the directory where all the output folders will be created"
-echo -e "          --ref -r       Imputation reference panel (HRC or 1000G)"
-echo -e "          --start -s     First step"
-echo -e "          --end -e       Last step"
-echo -e "          --temp -t      Enable larger temp storage (or use PBSTMPDIR scratch folder)"
-echo -e "          --confirm -c   Initiate working mode"
-echo -e "          LOG            Log report file name"
+echo -e "          --vcf -v [STR]      Full path of the input vcf file to be QCed/imputed"
+echo -e "          --out -o [STR]      Path of the directory where all the output folders will be created"
+echo -e "          --ref -r [STR]      Imputation reference panel (HRC or 1000G)"
+echo -e "          --start -s [INT]    First step"
+echo -e "          --end -e [INT]      Last step"
+echo -e "          --temp -t [STR]     (Optional) Enable larger temp storage in step2 (or use PBSTMPDIR scratch folder)"
+echo -e "          --wgs -w            (Optional) Enable variant down-sampling in step3 for WGS/imputed data"
+echo -e "          --confirm -c        (Optional) Initiate working mode"
+echo -e "          LOG                 (Optional) Log report file name"
 echo
 echo -e "Debug Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf --out /mnt/stsi/stsi0/raqueld --ref HRC --start 0 --end 1 > MESA_jobs_c1_0-1.txt"
-echo -e "Working Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf --out /mnt/stsi/stsi0/raqueld --ref HRC --start 2 --end 6 --temp ~/ --confirm > MESA_jobs_c1_2-6.txt"
+echo -e "Working Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/c1_ARIC_WGS_Freeze3.vcf --out /mnt/stsi/stsi0/sfchen/dbgap/aric_wgs --ref HRC --start 2 --end 6 --temp /mnt/stsi/stsi0/sfchen/temp --wgs --confirm > ARIC_WGS_2-6.txt"
 echo 
 
 
@@ -119,6 +122,7 @@ if [ "$ref" != "HRC" ] && [ "$ref" != "1KG" ]; then echo "WARNING:  Invalid refe
 if [ -z $start_from ]; then start_from=999; fi
 if [ -z $stop_after ]; then stop_after=999; fi
 if [ -z $temp ]; then echo "INFO:     No CUSTOM_TEMP, use system scratch folder (limited to 30GB temporary storage)"; fi
+if [ "$wgs" == true ]; then wgs_mode='yes'; else wgs_mode='no'; fi
 if [ "$confirm" == true ]; then run=1; else run=0; fi
 
 
@@ -129,7 +133,7 @@ echo "---------------------"
 echo "User input:  VCF_PATH: ${myinput}"
 echo "             OUT_ROOT: ${outroot}"
 echo "             CUSTOM_TEMP: ${temp}"
-echo "User option: REF=${ref}, START=${start_from}, STOP=${stop_after}, RUN=${run}"
+echo "User option: REF=${ref}, START=${start_from}, STOP=${stop_after}, WGS=${wgs_mode}, RUN=${run}"
 echo 
 
 
@@ -145,7 +149,7 @@ prefix=$(echo $infile | sed -e 's/\.vcf$//g')
 job0='qsub 0_check_vcf_build.job -v myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,copyoutput=no,gz=no -N 0_${prefix}'
 job1='qsub 1_lift_vcfs_to_GRCh37.job -v myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp},copyoutput=no -N 1_${prefix}'
 job2='qsub 2_Genotype_Harmonizer_QC1.job -v myinput=${outroot}/1_lift/${prefix}.${lifted_code}.bed,myoutdir=${outroot}/2_GH -N 2_${prefix}'
-job3='qsub 3_ancestry_analysis.job -v myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH.vcf.gz,myoutdir=${outroot}/3_ancestry -N 3_${prefix}'
+job3='qsub 3_ancestry_analysis.job -v myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH.vcf.gz,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} -N 3_${prefix}'
 job4='qsub 4_split_QC2.job -v myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.bed,myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 -N 4_${prefix}'
 job5='qsub 5_phase.job -v myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} -N 5_${prefix}'
 job6='qsub 6_impute.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} -N 6_${prefix}'
