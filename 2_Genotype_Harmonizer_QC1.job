@@ -35,7 +35,7 @@ export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
 
 #change this path to your own reference path
-if [ ! -z $ref_path ]; then
+if [ -z $ref_path ]; then
 	export ref_path=/mnt/stsi/stsi0/raqueld/1000G
 	echo "No reference path provided, check step 2 instructions in README. Using the following path as default: $ref_path"
 fi
