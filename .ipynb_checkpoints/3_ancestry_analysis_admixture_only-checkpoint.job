@@ -1,0 +1,144 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=120gb
+#PBS -q stsi
+#PBS -l walltime=900:00:00
+#PBS -j oe
+
+echo "Running on node:"
+hostname
+
+module load vcftools
+module load plink2
+module load admixture
+module load samtools/1.9
+module load R
+
+#bcftools=/gpfs/home/raqueld/bin/bcftools/bin/bcftools
+
+#How to run Example
+#qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
+
+#Step 3 consists of
+#Prune markers in input file by 0.05 LD threshold
+#Intersect input pruned markers with reference panel (1KG)
+#Perform ancestry analysis
+#Split subjects by ancestry (threshold >=0.95)
+
+
+starttime=$(date +%s)
+
+
+filename=$(basename $myinput)
+inprefix=$(basename $myinput | sed -e 's/\.vcf.gz$//g')
+outsubdir=$(basename $myinput | sed -e 's~\.lifted.*~~g')
+indir=$(dirname $myinput)
+
+if [ ! -d $myoutdir/$outsubdir ]; then
+	mkdir -p $myoutdir/$outsubdir
+fi
+
+cd $myoutdir/$outsubdir
+
+echo "Preparing data to run ancestry analysis."
+
+vcfstarttime=$(date +%s)
+
+echo "Pruning markers using 0.05 LD threshold"
+#Skip# plink --vcf $myinput --indep-pairwise 100 10 0.05 --out $inprefix # produces <name.prune.in> and <name.prune.out>
+
+#RR working directly with VCF file now
+#plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $inprefix.pruned
+#Skip# vcftools --gzvcf $myinput --snps $inprefix.prune.in --recode --recode-INFO-all --out $inprefix.pruned
+
+#Skip# bgzip -c $inprefix.pruned.recode.vcf > $inprefix.pruned.vcf.gz
+#Skip# rm $inprefix.pruned.recode.vcf
+
+#Skip# tabix -p vcf $inprefix.pruned.vcf.gz
+
+echo "Generating intersection between input data and reference panel for ancestry"
+#Skip# bcftools isec $inprefix.pruned.vcf.gz /mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz -p ${inprefix}_tmp -n =2  -w 1,2 --threads 16 -Oz
+
+#Skip# bcftools merge ${inprefix}_tmp/0000.vcf.gz ${inprefix}_tmp/0001.vcf.gz --threads 16 -Oz -o $inprefix.pruned.intersect1KG.vcf.gz
+
+#Skip# tabix -f -p vcf $inprefix.pruned.intersect1KG.vcf.gz
+
+echo "Converting intersection to bed format"
+#Skip# plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --make-bed --out $inprefix.pruned.intersect1KG
+
+
+echo "Generating population file for admixture"
+inputN=$(bcftools query -l $inprefix.pruned.vcf.gz | wc -l | awk '{print $1}')
+
+if [ -f $inprefix.pruned.intersect1KG.pop ]; then
+	
+      rm $inprefix.pruned.intersect1KG.pop
+      echo
+fi
+
+for i in $(seq 1 1 $inputN); do
+    echo
+done >> $inprefix.pruned.intersect1KG.pop
+
+cat /gpfs/group/torkamani/raqueld/ancestry/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
+
+vcfendtime=$(date +%s)
+
+
+admstarttime=$(date +%s)
+
+	admixture --supervised $inprefix.pruned.intersect1KG.bed 5 -j16
+
+admendtime=$(date +%s)
+
+poststarttime=$(date +%s)
+
+echo "Splitting subjects by ancestry..."
+
+cat $inprefix.pruned.intersect1KG.fam | awk '{print $1 "_" $2}' > $inprefix.pruned.intersect1KG.subjectIDs
+
+paste $inprefix.pruned.intersect1KG.subjectIDs $inprefix.pruned.intersect1KG.5.Q | tr '\t' ' ' > $inprefix.pruned.intersect1KG.5.Q.IDs
+
+#vcf-query -l $inprefix.pruned.vcf.gz > $inprefix.pruned.subjectIDs
+
+echo "Converting input to bed format"
+#FIXING STUPID BUG WITH keep-allele-order
+#plink --vcf $myinput --keep-allele-order --make-bed --out $inprefix
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\n' $myinput > $inprefix.pos
+plink --vcf $myinput --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix
+
+cat $inprefix.fam | awk '{print $1 "_" $2 "\t" $1 "\t" $2}' > $inprefix.pruned.subjectIDs
+
+Rscript  ~/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+
+#6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.5.ids
+#6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.pruned.intersect1KG.5.Q.IDs.mixed.ids
+
+for i in $(seq 1 5); do 
+
+	if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids ]; then
+
+		plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix.ancestry-$i
+
+	fi
+
+done
+
+if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids ]; then
+
+	plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix.ancestry-mixed
+fi
+
+echo "Execution complete. Results ready for HWE filtering and phasing at $myoutdir/$outsubdir/$inprefix.ancestry-_.bed"
+
+postendtime=$(date +%s)
+
+vcfruntime=$((vcfendtime-vcfstarttime))
+admruntime=$((admendtime-admstarttime))
+postruntime=$((postendtime-poststarttime))
+
+echo "Preprocessing run time: $vcfruntime"
+echo "Admixture run time: $admruntime"
+echo "Postprocessing run time: $postruntime"
+
+

@@ -154,14 +154,14 @@ infile=$(basename ${myinput})
 prefix=$(echo $infile | sed -e 's/\.vcf.gz$//g' | sed -e 's/\.txt$//g' )
 
 # Assign submission command line
-job0='qsub 0_check_vcf_build.job -v myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked -N 0_${prefix}'
-job1='qsub 1_lift_vcfs_to_GRCh37.job -v myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} -N 1_${prefix}'
-job2='qsub 2_Genotype_Harmonizer_QC1.job -v myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH -N 2_${prefix}'
-job3='qsub 3_ancestry_analysis.job -v myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} -N 3_${prefix}'
-job4='qsub 4_split_QC2.job -v myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 -N 4_${prefix}'
-job5='qsub 5_phase.job -v myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} -N 5_${prefix}'
-job6='qsub 6_impute.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} -N 6_${prefix}'
-job7='qsub 7_local_ancestry.job -v myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/7_local_ancestry_${lai_ref},lai_reftype=${lai_ref} -N 6_${prefix}' #todo
+job0='sbatch 0_check_vcf_build.slurm.job --export=myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}-%j.out --error=0_${prefix}-%j.log'
+job1='sbatch 1_lift_vcfs_to_GRCh37.slurm.job --export=myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}-%j.out --error=1_${prefix}-%j.log'
+job2='sbatch 2_Genotype_Harmonizer_QC1.slurm.job --export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}-%j.out --error=2_${prefix}-%j.log'
+job3='sbatch 3_ancestry_analysis.slurm.job --export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} --job-name=3_${prefix} --out=3_${prefix}-%j.out --error=3_${prefix}-%j.log'
+job4='sbatch 4_split_QC2.slurm.job --export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}-%j.out --error=4_${prefix}-%j.log'
+job5='sbatch 5_phase.slurm.job --export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} --job-name=5_${prefix} --out=5_${prefix}-%j.out --error=5_${prefix}-%j.log'
+job6='sbatch 6_impute.slurm.job --export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} --job-name=6_${prefix} --out=6_${prefix}-%j.out --error=6_${prefix}-%j.log'
+# job7='sbatch 7_local_ancestry.slurm.job --export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/7_local_ancestry_${lai_ref},lai_reftype=${lai_ref} --job-name=6_${prefix}' # deprecated
 
 echo "--------------------------"
 echo "## Preview command line ##"
@@ -211,7 +211,7 @@ job() {
 #             echo depend_flag ${last_step}
         fi
 
-        # recompose the qsub command line with proper variables
+        # recompose the sbatch command line with proper variables
         job=$(eval echo ${job} ${depend_flag})
         echo $job
         

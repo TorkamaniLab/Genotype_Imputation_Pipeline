@@ -1,9 +1,20 @@
 #!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=120G
+#SBATCH --partition=em
+#SBATCH --time=540:00:00
+
+# Commented out torque header
+: '
+#!/bin/bash
 #PBS -l nodes=1:ppn=16
 #PBS -l mem=120gb
-# #PBS -q stsi 
+#PBS -q stsi 
 #PBS -l walltime=540:00:00
 #PBS -j oe
+'
 
 date
 

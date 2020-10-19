@@ -1,19 +1,29 @@
 #!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=120G
+#SBATCH --partition=em
+#SBATCH --time=340:00:00
+
+
+# Commented out torque header
+: '
+#!/bin/bash
 #PBS -l nodes=1:ppn=16
 #PBS -l mem=120gb
-# #PBS -q stsi
+#PBS -q stsi
 #PBS -l walltime=340:00:00
 #PBS -j oe
+'
 
 echo "Running on node:"
 hostname
 
-newgrp tlabdbgap
-
 module load plink2
 module load ucsc_tools/373
 # module load vcftools
-module load samtools/1.9
+module load samtools # update for SLURM
 
 #Examples of the variables needed (-v)
 #myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
