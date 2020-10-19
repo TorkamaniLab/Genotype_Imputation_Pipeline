@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=2gb
+#PBS -q sata 
+#PBS -l walltime=600:00:00
+#PBS -j oe
+
+
+
+#example qsub job_submitter.job -v parmax=4,joblist=eMERGE_file_list_to_reverse_imputation.txt.0000.jobs -N job.submitter0
+
+overallstarttime=$(date +%s)
+
+echo "Running on node:"
+hostname
+
+cd /gpfs/home/raqueld/scripts/final_pipeline
+
+count=1
+
+while read line; do
+
+	while :
+	do
+
+		jobcount=$(qstat -u raqueld | grep -w "R\|Q" | wc -l)
+		if [ "$jobcount" -le "$parmax" ]; then
+			echo job count is $jobcount, submitting more:
+			echo $line
+			sleep 3
+			$line
+			sleep 3
+			echo "$count jobs submitted."
+			count=$(expr $count + 1)
+			break
+		fi
+		sleep 3;
+	done
+
+done < $joblist
+
+overallendtime=$(date +%s)
+
+overallruntime=$((overallendtime-overallstarttime))
+
+echo "Overall run time: $overallruntime"

@@ -1,0 +1,90 @@
+#!/bin/bash
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=120gb
+#PBS -q stsi
+#PBS -l walltime=540:00:00
+#PBS -j oe
+
+date
+
+echo "Running on node:"
+hostname
+pwd
+
+#myoutdir example:
+#/stsi/raqueld/5_phase
+
+#job example:
+#qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_genotypes-black.lifted_NCBI36_to_GRCh37.GH.chr1.bed,myoutdir=/stsi/raqueld/5_N_tests,reftype=HRC -N 5_N_mesa_genotypes-black
+#qsub 5_phase.job -v myinput=/stsi/raqueld/4_split_QC2/unique/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed/ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed.lifted_NCBI36_to_GRCh37.GH.ancestry-3.chr22.bed,myoutdir=/stsi/raqueld/5_phase,reftype=HRC -N 5_ARIC_PLINK_flagged_chromosomal_abnormalities_zeroed_out_bed
+#the input must have the suffix *.lifted*.chr1.bed, *lifted*.chr2.bed, *.lifted*.chr3.bed, etc. The previous steps in the pipeline generate those suffixes automatically, but keep these suffixes in mind if you are running this step as a stand alone tools, without running the previous steps
+
+module load vcftools
+module load samtools
+module load plink2
+
+
+#/gpfs/home/raqueld/bin/Eagle_v2.4/eagle --geneticMapFile=/stsi/raqueld/ref/genetic_map_hg19.txt.gz
+
+
+starttime=$(date +%s)
+
+eagle=/gpfs/home/sfchen/bin/Eagle_v2.4.1/eagle
+inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
+indir=$(dirname $myinput)
+mychr=$(echo $inprefix | sed -e 's/.*\.chr//g')
+mymap=/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz
+
+echo "Chromosome $mychr"
+echo "Input prefix $inprefix"
+
+outsubdir=$(basename $myinput | sed -e 's/\.lifted.*//g')
+
+if [ ! -d $myoutdir/$outsubdir ]; then
+	mkdir -p $myoutdir/$outsubdir
+fi
+
+cd $myoutdir/$outsubdir
+
+if [ "$reftype" == "HRC" ]; then
+	myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.bcf
+	echo "Using HRC reference panel, file: $myref"
+else
+	myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bcf
+	echo "Using 1KG reference, file: $myref"
+fi
+
+plinkstarttime=$(date +%s)
+
+#FIXING STUPID BROKEN KEEP-ALLELE-ORDER
+#plink --bfile $indir/$inprefix --recode vcf bgz --keep-allele-order --out $inprefix
+plink --bfile  $indir/$inprefix --recode vcf bgz --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --out $inprefix
+
+tabix -f -p vcf $inprefix.vcf.gz
+
+plinkendtime=$(date +%s)
+
+eaglestarttime=$(date +%s)
+
+$eagle --vcfTarget=$inprefix.vcf.gz \
+--vcfRef=$myref \
+--noImpMissing \
+--geneticMapFile=$mymap \
+--Kpbwt=100000 --numThreads=16 \
+--chrom=$mychr --allowRefAltSwap \
+--outPrefix=$inprefix.phased
+
+eagleendtime=$(date +%s)
+
+echo "Ready for next step, results ready for imputation in $myoutdir/$outsubdir"
+echo "Output prefix $inprefix.phased"
+
+endtime=$(date +%s)
+
+eagleruntime=$((eagleendtime-eaglestarttime))
+plinkruntime=$((plinkendtime-plinkstarttime))
+overallruntime=$((endtime-starttime))
+
+echo "Plink run time: $plinkruntime"
+echo "Eagle run time: $eagleruntime"
+echo "Overall run time: $overallruntime"
