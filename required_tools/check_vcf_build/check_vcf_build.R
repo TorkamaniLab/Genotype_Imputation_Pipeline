@@ -36,7 +36,8 @@ convertToComplement<-function(x){
 
 filename <- args[1]
 
-command <- paste0("grep -m 100000 -w \"^1\\|^chr1\" ",filename, " | cut -f 1,2,3,4,5")
+# enable reading both vcf and vcf.gz files
+command <- paste0("less ", filename, " | grep -m 100000 -w \"^1\\|^chr1\" | cut -f 1,2,3,4,5")
 #print(command) 
 
 print(paste0("Reading first 100K markers from chr1 in input file: ", filename, "..."))
