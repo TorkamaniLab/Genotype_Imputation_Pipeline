@@ -37,6 +37,10 @@ After copying the required tools, please read the following instructions on how 
 
 ### Step 0: Check genome build and select chain file
 
+__Prerequisite__  
+- N/A
+
+__Usage example__  
 ```
 qsub 0_check_vcf_build.job -v  myinput=/path/to/vcf/genotype_array.vcf,myoutput=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,gz=yes
 ```
@@ -49,11 +53,15 @@ Where:
 The output file will have the sufix *.BuildChecked
 
 ### Step 1: Lifeover input genotype array to GRCh37 build
-This step will lift the input to GRCh37 build using the *.BuildChecked file generated in the previous steo to select the correct chain file.
 
+__Prerequisite__  
+- N/A
+
+__Usage example__  
 ```
 qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/path/to/vcf/genotype_array.vcf,buildcheck=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,myoutdir=/path/to/output/1_lift,custom_temp=/my/temp/path/tmp
 ```
+This step will lift the input to GRCh37 build using the *.BuildChecked file generated in the previous steo to select the correct chain file.
 
 Where:
 - myinput is the same input file as step 0 (use full path)
@@ -66,6 +74,10 @@ The output file will have the suffix *.lifted_[old_build]_to_GRCh37.bed
 
 ### Step 2: LD-based fix of strand flips, fix strand swaps and mismatching alleles, and initial quality control (90% missingnes per variant)
 
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/1000G`
+
+__Usage example__  
 ```
 qsub 2_Genotype_Harmonizer.job -v myinput=/path/to/output/1_lift/genotype_array.lifted_NCBI36_to_GRCh37.bed,myoutdir=/path/to/output/2_GH,ref_path=/my/ref/path
 ```
@@ -82,8 +94,7 @@ The output files will have the suffix *.lifted_[old_build]_to_GRCh37.GH.bim, *.l
 __Prerequisite__  
 - `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
 
-__Usage example__ 
- 
+__Usage example__  
 ```
 qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
 ```
@@ -97,7 +108,6 @@ qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_samp
 
 
 ### Step 4: 2nd quality control
-> The input file will be split by chromosome and test for missingness per variant, per sample or by Hardy-Weinberg equilibrium filtering.
 
 __Prerequisite__  
 N/A  
@@ -113,6 +123,7 @@ qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sample
 * myoutputdir=`/path/4_split_QC2`  
 * hwe=`0.1`, geno=`0.1`, mind=`0.1`
     * set as `''` to disable the flag.
+> The input file will be split by chromosome and test for missingness per variant, per sample or by Hardy-Weinberg equilibrium filtering.
 
 
 
