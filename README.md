@@ -80,8 +80,7 @@ The output files will have the suffix *.lifted_[old_build]_to_GRCh37.GH.bim, *.l
 ### Step 3: Estimate ancestry and split samples by ancestry
 
 __Prerequisite__  
-
-- [x] `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
 
 __Usage example__ 
  
@@ -102,6 +101,7 @@ qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_samp
 
 __Prerequisite__  
 N/A  
+
 __Usage example__ 
 ```
 qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/N_tests,hwe='',geno=0.1,mind=0.1 -N 4_N_mesa_genotypes-black
@@ -118,6 +118,11 @@ qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sample
 
 ### Step 5: Phasing
 
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz`
+- `/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.bcf`
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bcf`
+
 ```
 qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_genotypes-black.lifted_NCBI36_to_GRCh37.GH.chr1.bed,myoutdir=/stsi/raqueld/5_N_tests,reftype=HRC -N 5_N_mesa_genotypes-black
 ```
@@ -127,11 +132,17 @@ qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_geno
 
 ### Step 6: Imputation and post-imputation quality control
 
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz`
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz`
+
 ```
 qsub 6_impute.job -v myinput=/stsi/raqueld/5_N_tests/mesa_genotypes-white/mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18.phased.vcf.gz,myoutdir=/stsi/raqueld/6_N_tests,reftype=HRC -N 6_mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18
 ```
 > if running this step as stand alone tool, input file must have the suffix .lifted_\*.chr\*.phased.vcf.gz, otherwise the pipeline wont work, if you use the previous step to generate this input file, then it will work fine.
 date
+
+---
 
 ## Running all steps automatically 
 
