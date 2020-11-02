@@ -15,7 +15,8 @@ The pipeline was tested in garibaldi using the following required software and p
 
 - R v3.5.1
 - vcftools v0.1.14
-- plink v1.9
+- PLINK v1.9 
+- PLINK v2.00a3LM 64-bit Intel
 - samtools v1.9
 - GenotypeHarmonizer v1.4.20
 - ADMIXTURE
