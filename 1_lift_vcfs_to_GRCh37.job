@@ -157,11 +157,11 @@ LIFT_OVER () {
             done
         fi
     
-    rm $name.map
-    rm *with_dup*
-    rm $name.lifted_$liftname.sorted.*
-    rm $name.list_multi_a_markers.txt
-    rm $name.sorted.bi.*
+#    rm $name.map
+#    rm *with_dup*
+#    rm $name.lifted_$liftname.sorted.*
+#    rm $name.list_multi_a_markers.txt
+#    rm $name.sorted.bi.*
 }
 export -f LIFT_OVER
 
@@ -200,6 +200,13 @@ vcfendtime=$(date +%s)
 liftstarttime=$(date +%s)
 parallel LIFT_OVER {1} ::: {1..22}
 liftendtime=$(date +%s)
+
+
+rm $name.map
+rm *with_dup*
+rm $name.lifted_$liftname.sorted.*
+rm $name.list_multi_a_markers.txt
+rm $name.sorted.bi.*
 
 
 vcfruntime=$((vcfendtime-vcfstarttime))
