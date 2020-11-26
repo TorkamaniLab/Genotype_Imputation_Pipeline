@@ -15,7 +15,8 @@ The pipeline was tested in garibaldi using the following required software and p
 
 - R v3.5.1
 - vcftools v0.1.14
-- plink v1.9
+- PLINK v1.9 
+- PLINK v2.00a3LM 64-bit Intel
 - samtools v1.9
 - GenotypeHarmonizer v1.4.20
 - ADMIXTURE
@@ -37,6 +38,10 @@ After copying the required tools, please read the following instructions on how 
 
 ### Step 0: Check genome build and select chain file
 
+__Prerequisite__  
+- N/A
+
+__Usage example__  
 ```
 qsub 0_check_vcf_build.job -v  myinput=/path/to/vcf/genotype_array.vcf,myoutput=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,gz=yes
 ```
@@ -49,11 +54,15 @@ Where:
 The output file will have the sufix *.BuildChecked
 
 ### Step 1: Lifeover input genotype array to GRCh37 build
-This step will lift the input to GRCh37 build using the *.BuildChecked file generated in the previous steo to select the correct chain file.
 
+__Prerequisite__  
+- N/A
+
+__Usage example__  
 ```
 qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/path/to/vcf/genotype_array.vcf,buildcheck=/path/to/output/0_check_vcf_build/genotype_array.BuildChecked,myoutdir=/path/to/output/1_lift,custom_temp=/my/temp/path/tmp
 ```
+This step will lift the input to GRCh37 build using the *.BuildChecked file generated in the previous steo to select the correct chain file.
 
 Where:
 - myinput is the same input file as step 0 (use full path)
@@ -66,6 +75,10 @@ The output file will have the suffix *.lifted_[old_build]_to_GRCh37.bed
 
 ### Step 2: LD-based fix of strand flips, fix strand swaps and mismatching alleles, and initial quality control (90% missingnes per variant)
 
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/1000G`
+
+__Usage example__  
 ```
 qsub 2_Genotype_Harmonizer.job -v myinput=/path/to/output/1_lift/genotype_array.lifted_NCBI36_to_GRCh37.bed,myoutdir=/path/to/output/2_GH,ref_path=/my/ref/path
 ```
@@ -80,11 +93,9 @@ The output files will have the suffix *.lifted_[old_build]_to_GRCh37.GH.bim, *.l
 ### Step 3: Estimate ancestry and split samples by ancestry
 
 __Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
 
-- [x] `/mnt/stsi/stsi0/raqueld/1000G/ALL.merged.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz`
-
-__Usage example__ 
- 
+__Usage example__  
 ```
 qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
 ```
@@ -98,10 +109,10 @@ qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_samp
 
 
 ### Step 4: 2nd quality control
-> The input file will be split by chromosome and test for missingness per variant, per sample or by Hardy-Weinberg equilibrium filtering.
 
 __Prerequisite__  
 N/A  
+
 __Usage example__ 
 ```
 qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/N_tests,hwe='',geno=0.1,mind=0.1 -N 4_N_mesa_genotypes-black
@@ -113,10 +124,16 @@ qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sample
 * myoutputdir=`/path/4_split_QC2`  
 * hwe=`0.1`, geno=`0.1`, mind=`0.1`
     * set as `''` to disable the flag.
+> The input file will be split by chromosome and test for missingness per variant, per sample or by Hardy-Weinberg equilibrium filtering.
 
 
 
 ### Step 5: Phasing
+
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/1000G/map/genetic_map_GRCh37_merged.txt.gz`
+- `/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.bcf`
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.bcf`
 
 ```
 qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_genotypes-black.lifted_NCBI36_to_GRCh37.GH.chr1.bed,myoutdir=/stsi/raqueld/5_N_tests,reftype=HRC -N 5_N_mesa_genotypes-black
@@ -127,43 +144,88 @@ qsub 5_phase.job -v myinput=/stsi/raqueld/N_tests/aric_genotypes-black/aric_geno
 
 ### Step 6: Imputation and post-imputation quality control
 
+__Prerequisite__  
+- `/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz`
+- `/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz`
+
 ```
 qsub 6_impute.job -v myinput=/stsi/raqueld/5_N_tests/mesa_genotypes-white/mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18.phased.vcf.gz,myoutdir=/stsi/raqueld/6_N_tests,reftype=HRC -N 6_mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18
 ```
 > if running this step as stand alone tool, input file must have the suffix .lifted_\*.chr\*.phased.vcf.gz, otherwise the pipeline wont work, if you use the previous step to generate this input file, then it will work fine.
 date
 
-## Running all steps automatically (experimental)
+---
+
+## Running all steps automatically 
 
 This script will setup job dependencies and submit/monitore all the jobs for all the steps automatically.
-Please note! This method is still in beta/experimental version, please make sure you customize the script before you run this.
 
 ```
-bash generate_commands_automatically_from_vcf_path.sh
-Usage:    bash script.sh VCF_PATH OUT_ROOT > LOG
+bash genotype_imputation_distributor.sh
 
-          script.sh    This script
-          VCF_PATH     Full path of the input vcf file to be QCed/imputed
-          OUT_ROOT     Path of the directory where all the output folders will be created
-          LOG          Log report file name
+ ####################################
+ ##                                ##
+ ##    Imputation / QC Pipeline    ##
+ ##          Torkamani Lab         ##
+ ##                                ##
+ ##         Author: Raquel Dias    ##
+ ##                 Shaun Chen     ##
+ ##  Last modified: 12/27/19       ##
+ ##                                ##
+ ####################################
 
-Example:  bash generate_commands_automatically_from_vcf_path.sh /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf /mnt/stsi/stsi0/raqueld > MESA_jobs_c1.txt
+Usage:    bash script.sh --vcf --out --ref --start --end (--confirm) > LOG
+
+          script.sh      This script
+          --vcf -v [STR]      Full path of the input vcf file to be QCed/imputed
+          --out -o [STR]      Path of the directory where all the output folders will be created
+          --ref -r [STR]      Imputation reference panel (HRC or 1000G)
+          --start -s [INT]    First step
+          --end -e [INT]      Last step
+          --temp -t [STR]     (Optional) Enable larger temp storage in step2 (or use PBSTMPDIR scratch folder)
+          --wgs -w            (Optional) Enable variant down-sampling in step3 for WGS/imputed data
+          --confirm -c        (Optional) Initiate working mode
+          LOG                 (Optional) Log report file name
+
+Prepare input:  for chrom in {1..22}; do printf "${chrom}\t$(ls $(pwd)/[##inprefix##]*chr${chrom}.vcf.gz)\n"; done > [##inprefix##].txt
+
+Debug Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf --out /mnt/stsi/stsi0/raqueld --ref HRC --start 0 --end 1 > MESA_jobs_c1_0-1.txt
+Working Example:  bash script.sh --vcf /mnt/stsi/stsi0/raquel
 ```
 
-Once you ran the script setting the run variable inside the script as run=1, the script will save all the submited job commands and job IDs into a log file that you can use for debugging and locating your results.
+Once you ran the script setting the run variable inside the script as `--confirm`, the script will save all the submited job commands and job IDs into a log file that you can use for debugging and locating your results.
 
+## Running job in parallel mode
+
+Use the following command:
 ```
-head MESA_jobs_c1.txt
-qsub 0_check_vcf_build.job -v myinput=/mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf,myoutput=/mnt/stsi/stsi0/raqueld/0_check_vcf_build/SHARE_MESA_c2_flipfix.BuildChecked,copyoutput=no,gz=no -N 0_SHARE_MESA_c2_flipfix
-4139767.garibaldi01-adm.cluster.net
-qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf,buildcheck=/mnt/stsi/stsi0/raqueld/0_check_vcf_build/SHARE_MESA_c2_flipfix.BuildChecked,myoutdir=/mnt/stsi/stsi0/raqueld/1_lift,copyoutput=no -N 1_SHARE_MESA_c2_flipfix
-4139768.garibaldi01-adm.cluster.net
-qsub 2_Genotype_Harmonizer_QC1.job -v myinput=/mnt/stsi/stsi0/raqueld/1_lift/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.bed,myoutdir=/mnt/stsi/stsi0/raqueld/2_GH -N 2_SHARE_MESA_c2_flipfix
-qsub 3_ancestry_analysis.job -v myinput=/mnt/stsi/stsi0/raqueld/2_GH/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.vcf.gz,myoutdir=/mnt/stsi/stsi0/raqueld/3_ancestry -N 3_SHARE_MESA_c2_flipfix
-qsub 4_split_QC2.job -v myinput=/mnt/stsi/stsi0/raqueld/3_ancestry/SHARE_MESA_c2_flipfix/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.ancestry-1.bed,myoutdir=/mnt/stsi/stsi0/raqueld/4_split_QC2,geno=0.1,mind=0.05 -N 4_SHARE_MESA_c2_flipfix
-4139771.garibaldi01-adm.cluster.net
-qsub 4_split_QC2.job -v myinput=/mnt/stsi/stsi0/raqueld/3_ancestry/SHARE_MESA_c2_flipfix/SHARE_MESA_c2_flipfix.lifted_NCBI36_to_GRCh37.GH.ancestry-2.bed,myoutdir=/mnt/stsi/stsi0/raqueld/4_split_QC2,geno=0.1,mind=0.05 -N 4_SHARE_MESA_c2_flipfix
-4139772.garibaldi01-adm.cluster.net
+for chrom in {1..22}; do printf "${chrom}\t$(ls $(pwd)/[##inprefix##]*chr${chrom}.vcf.gz)\n"; done > [##inprefix##].txt
+```
+
+To prepare an txt input taken by `--vcf` as:
+```
+1	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr1.vcf.gz
+2	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr2.vcf.gz
+3	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr3.vcf.gz
+4	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr4.vcf.gz
+5	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr5.vcf.gz
+6	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr6.vcf.gz
+7	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr7.vcf.gz
+8	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr8.vcf.gz
+9	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr9.vcf.gz
+10	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr10.vcf.gz
+11	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr11.vcf.gz
+12	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr12.vcf.gz
+13	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr13.vcf.gz
+14	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr14.vcf.gz
+15	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr15.vcf.gz
+16	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr16.vcf.gz
+17	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr17.vcf.gz
+18	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr18.vcf.gz
+19	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr19.vcf.gz
+20	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr20.vcf.gz
+21	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr21.vcf.gz
+22	/mnt/stsi/stsi0/sfchen/UKBB/split_QC/ukbb_hap_v2_000/ukb_hap_v2_000_chr22.vcf.gz
 ```
 
 ## Contact information
