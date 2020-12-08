@@ -20,10 +20,12 @@ pwd
 #the input must have the suffix *.lifted*.chr1.bed, *lifted*.chr2.bed, *.lifted*.chr3.bed, etc. The previous steps in the pipeline generate those suffixes automatically, but keep these suffixes in mind if you are running this step as a stand alone tools, without running the previous steps
 
 module load samtools
-module load plink2 # Retired, make sure you have plink2 in your local bin.
+#module load plink2 # moved plink to required_tools
 
 #/gpfs/home/raqueld/bin/Eagle_v2.4/eagle --geneticMapFile=/stsi/raqueld/ref/genetic_map_hg19.txt.gz
 
+export plink="$HOME/required_tools/plink"
+export plink2="$HOME/required_tools/plink2"
 
 starttime=$(date +%s)
 
@@ -55,8 +57,8 @@ fi
 plinkstarttime=$(date +%s)
 
 #FIXING STUPID BROKEN KEEP-ALLELE-ORDER
-# plink --bfile  $indir/$inprefix --recode vcf bgz --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --out $inprefix
-plink2 --bfile  $indir/$inprefix --export vcf-4.2 bgz --set-missing-var-ids @:#\$1:\$2 --out $inprefix
+# $plink --bfile  $indir/$inprefix --recode vcf bgz --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --out $inprefix
+$plink2 --bfile  $indir/$inprefix --export vcf-4.2 bgz --set-missing-var-ids @:#\$1:\$2 --out $inprefix
 
 tabix -f -p vcf $inprefix.vcf.gz
 
