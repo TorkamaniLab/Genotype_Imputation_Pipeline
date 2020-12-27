@@ -1,23 +1,28 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=440:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
+
 
 #example 
 #qsub 6_impute.job -v myinput=/stsi/raqueld/5_N_tests/mesa_genotypes-white/mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18.phased.vcf.gz,myoutdir=/stsi/raqueld/6_N_tests,reftype=HRC -N 6_mesa_genotypes-white.lifted_NCBI36_to_GRCh37.GH.chr18
 # if running this step as stand alone tool, input file must have the suffix .lifted_*.chr*.phased.vcf.gz, otherwise the pipeline wont work, if you use the previous step to generate this input file, then it will work fine.
-date
 
+
+date
 echo "Running on node:"
 hostname
 pwd
 echo "myinput $myinput"
 
+
+module purge
 module load samtools
 module load minimac4/1.0.2
 imputationSoftware=minimac4
+
 
 inprefix=$(basename $myinput | sed -e 's/\.phased\.vcf\.gz//g')
 indir=$(dirname $myinput)

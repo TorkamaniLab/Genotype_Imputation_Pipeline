@@ -1,15 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi 
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-date
-
-echo "Running on node:"
-hostname
-pwd
 
 #myoutdir example:
 #/stsi/raqueld/2_GH
@@ -23,17 +18,26 @@ pwd
 #Fix non ambiguous genotype swaps
 #Remove duplicate SNPs
 
+
+date
+echo "Running on node:"
+hostname
+pwd
+
+
+module purge
 module load vcftools
-module load samtools/1.9
-module load plink2
-#TODO $ which plink2
+module load samtools
 
-export GH=$PBS_O_WORKDIR/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar
-
-starttime=$(date +%s)
 
 export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
+
+export GH="$SLURM_SUBMIT_DIR/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar"
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
+
+starttime=$(date +%s)
 
 #change this path to your own reference path
 if [ -z $ref_path ]; then
@@ -56,10 +60,10 @@ export outname=$(basename $myinput).GH
 # PLINK_FUN() {
 #     if [ "$1" -eq 23 ]; then
 #         # plink --bfile $indir/$inprefix --biallelic-only --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
-#         plink2 --bfile $indir/$inprefix --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
+#         $plink2 --bfile $indir/$inprefix --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1,X --make-bed --out $inprefix.chr$1
 #     else
 #         # plink --bfile $indir/$inprefix --biallelic-only --a1-allele $indir/$inprefix.bim 5 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
-#         plink2 --bfile $indir/$inprefix --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
+#         $plink2 --bfile $indir/$inprefix --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --allow-extra-chr --chr $1 --make-bed --out $inprefix.chr$1
 #     fi
 # }
 # export -f PLINK_FUN
@@ -149,7 +153,7 @@ echo "GH done."
 FIXREF_FUN () {
     echo "Merging all chromosomes..."
     # NOTE: --id-delim can no longer be used with --const-fid or --double-id.
-    plink2 --bfile $outname.chr$1 --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --export vcf-4.2 bgz --double-id --out $outname.chr$1.0
+    $plink2 --bfile $outname.chr$1 --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --export vcf-4.2 bgz --double-id --out $outname.chr$1.0
 
     tabix -p vcf $outname.chr$1.0.vcf.gz
     #rm $outname.m.bed $outname.m.bim $outname.m.fam

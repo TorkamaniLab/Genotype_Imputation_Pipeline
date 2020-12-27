@@ -1,23 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-echo "Running on node:"
-hostname
-
-module load vcftools
-#module load plink2 # moved plink to required_tools
-module load admixture
-module load samtools/1.9
-module load R
-
-export plink="$HOME/required_tools/plink"
-export plink2="$HOME/required_tools/plink2"
-
-#bcftools=/gpfs/home/raqueld/bin/bcftools/bin/bcftools
 
 #How to run Example
 #qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
@@ -29,8 +16,25 @@ export plink2="$HOME/required_tools/plink2"
 #Split subjects by ancestry (threshold >=0.95)
 
 
-starttime=$(date +%s)
+date
+echo "Running on node:"
+hostname
+pwd
 
+
+module purge
+module load vcftools
+module load admixture
+module load samtools
+module load R
+
+
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
+export split_by_ancestry="$SLURM_SUBMIT_DIR/required_tools/split_by_ancestry/split_by_ancestry.R"
+
+
+starttime=$(date +%s)
 
 export filename=$(basename $myinput)
 export inprefix=$(basename $myinput | sed -e 's/\.vcf.gz$//g')
@@ -145,7 +149,7 @@ echo "Get subject IDs"
 bcftools query -l $inprefix.chr1.pruned.vcf.gz | tr '_' '\t' | awk '{print$1"_"$2"\t"$1"\t"$2}' > $inprefix.pruned.subjectIDs
 
 echo "Split by ansestry cutoff 0.95"
-Rscript  $PBS_O_WORKDIR/required_tools/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+Rscript $split_by_ancestry $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
 
 
 SPLIT_FUN() {

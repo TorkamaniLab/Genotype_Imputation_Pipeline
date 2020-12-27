@@ -1,15 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi 
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-date
-
-echo "Running on node:"
-hostname
-pwd
 
 #myoutdir example:
 #/stsi/raqueld/2_GH
@@ -23,20 +18,26 @@ pwd
 #Fix non ambiguous genotype swaps
 #Remove duplicate SNPs
 
+
+date
+echo "Running on node:"
+hostname
+pwd
+
+
+module purge
 module load vcftools
-module load samtools/1.9
-#module load plink2 #using plink from required_tools
+module load samtools
 
-export GH=$PBS_O_WORKDIR/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar
-
-starttime=$(date +%s)
 
 export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
 
-export plink="$HOME/required_tools/plink"
-export plink2="$HOME/required_tools/plink2"
+export GH="$SLURM_SUBMIT_DIR/required_tools/GenotypeHarmonizer/GenotypeHarmonizer.jar"
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
 
+starttime=$(date +%s)
 
 #change this path to your own reference path
 if [ -z $ref_path ]; then

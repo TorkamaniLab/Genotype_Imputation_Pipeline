@@ -1,15 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-date
-
-echo "Running on node:"
-hostname
-pwd
 
 #myoutdir example:
 #/stsi/raqueld/2_GH
@@ -17,20 +12,29 @@ pwd
 #qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/N_tests,hwe='',geno=0.1,mind=0.1 -N 4_N_mesa_genotypes-black
 #qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sampleID_c1/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.ancestry-5.bed,myoutdir=/stsi/raqueld/4_split_QC2,hwe='',geno=0.1,mind=0.1 -N 4_6800_JHS_all_chr_sampleID_c1
 
+
+date
+echo "Running on node:"
+hostname
+pwd
+
+
+module purge
 module load samtools
-# module load plink2 # moved plink to required_tools
+
 
 #Missingness per individual --mind N
 #Missingness per marker --geno N
 #Hardy-Weinberg equilibrium --hwe N
+
 
 starttime=$(date +%s)
 
 export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
 
-export plink="$HOME/required_tools/plink"
-export plink2="$HOME/required_tools/plink2"
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
 
 outsubdir=$(basename $myinput | sed -e 's~\.lifted.*~~g')
 

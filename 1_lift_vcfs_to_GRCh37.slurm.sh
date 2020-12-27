@@ -1,19 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=340:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-echo "Running on node:"
-hostname
-
-newgrp tlabdbgap
-
-#module load plink2 #using plink from required_tools
-module load ucsc_tools/373
-# module load vcftools
-module load samtools/1.9
 
 #Examples of the variables needed (-v)
 #myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
@@ -24,11 +15,24 @@ module load samtools/1.9
 #qsub 1_lift_vcfs_to_GRCh37.job -v myinput=/stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf,buildcheck=/stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked,myoutdir=/stsi/raqueld/1_lift,custom_temp=/mnt/stsi/stsi0/raqueld/tmp -N 1_6800_JHS_all_chr_sampleID_c2
 
 
+date
+echo "Running on node:"
+hostname
+pwd
+
+
+newgrp tlabdbgap
+
+module purge
+module load ucsc_tools/373
+module load samtools
+
+
 export filename=$(basename $buildcheck)
 export inprefix=${filename/.BuildChecked/}
 
-export plink="$HOME/required_tools/plink"
-export plink2="$HOME/required_tools/plink2"
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
 
 
 # READ_ARR() {
@@ -79,8 +83,8 @@ export -f SPLIT_CHR
 
 
 LIFT_OVER () {
-    lift=$PBS_O_WORKDIR/required_tools/lift/LiftMap.py
-    cpath=$PBS_O_WORKDIR/required_tools/chainfiles
+    lift="required_tools/lift/LiftMap.py"
+    cpath="required_tools/chainfiles"
     cfilename=$(grep "Use chain file" $buildcheck | tr -d ' ' | tr ':' '\t' | tr -d '"' | cut -f 2 | sed -e 's/->/ /g')
     nchains=$(echo $cfilename | tr ' ' '\n' | wc -l | awk '{print $1}')
     checknone=$(grep "Use chain file" $buildcheck | grep "none" | wc -l)
@@ -170,11 +174,11 @@ export -f LIFT_OVER
 
 
 if [ ! -z $custom_temp ]; then
-    mkdir -p $custom_temp/$PBS_JOBID
-    export TEMP=$custom_temp/$PBS_JOBID
+    mkdir -p $custom_temp/$SLURM_JOBID
+    export TEMP=$custom_temp/$SLURM_JOBID
 else
-    mkdir -p $PBSTMPDIR/$PBS_JOBID
-    export TEMP=$PBSTMPDIR/$PBS_JOBID
+    mkdir -p $TMP/$SLURM_JOBID
+    export TEMP=$TMP/$SLURM_JOBID
 fi
 
 if [ ! -d $myoutdir ]; then

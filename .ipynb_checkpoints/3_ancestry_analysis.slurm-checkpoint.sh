@@ -1,20 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-echo "Running on node:"
-hostname
-
-module load vcftools
-# module load plink2 # Retired, make sure you have plink2 in your local bin.
-module load admixture
-module load samtools/1.9
-module load R
-
-#bcftools=/gpfs/home/raqueld/bin/bcftools/bin/bcftools
 
 #How to run Example
 #qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
@@ -26,8 +16,25 @@ module load R
 #Split subjects by ancestry (threshold >=0.95)
 
 
-starttime=$(date +%s)
+date
+echo "Running on node:"
+hostname
+pwd
 
+
+module purge
+module load vcftools
+module load admixture
+module load samtools
+module load R
+
+
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
+export split_by_ancestry="$SLURM_SUBMIT_DIR/required_tools/split_by_ancestry/split_by_ancestry.R"
+
+
+starttime=$(date +%s)
 
 export filename=$(basename $myinput)
 export inprefix=$(basename $myinput | sed -e 's/\.vcf.gz$//g')
@@ -51,9 +58,9 @@ PRUNE_FUN() {
         echo "Extracting 23andMe positions only for ancestry analysis, for speeding up ancestry analysis. Original positions will be restored later"
         #positions extracted from 190410_snps.23andme.clean.drop_dup.sorted.data
         bcftools view -R $PBS_O_WORKDIR/required_tools/chr_pos_23andme.txt ${myinput}.chr$1.vcf.gz -Ov -o ${inprefix}.chr$1.23andMe_pos.vcf
-        plink2 --vcf ${inprefix}.chr$1.23andMe_pos.vcf --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
+        $plink2 --vcf ${inprefix}.chr$1.23andMe_pos.vcf --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
     else
-        plink2 --vcf $myinput.chr$1.vcf.gz --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
+        $plink2 --vcf $myinput.chr$1.vcf.gz --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
     fi
 
     # plink --bfile $indir/$inprefix --extract $inprefix.prune.in --recode vcf bgz --keep-allele-order --set-missing-var-ids @:#\$1:\$2 --out $inprefix.pruned
@@ -102,7 +109,7 @@ rm $inprefix.pruned.intersect1KG.vcf
 
 echo "Converting intersection to bed format"
 # plink --vcf $inprefix.pruned.intersect1KG.vcf.gz --keep-allele-order --make-bed --out $inprefix.pruned.intersect1KG
-plink2 --vcf $inprefix.pruned.intersect1KG.id-delim.vcf --make-bed --id-delim '_' --out $inprefix.pruned.intersect1KG
+$plink2 --vcf $inprefix.pruned.intersect1KG.id-delim.vcf --make-bed --id-delim '_' --out $inprefix.pruned.intersect1KG
 rm inprefix.pruned.intersect1KG.id-delim.vcf
 
 
@@ -142,18 +149,18 @@ echo "Get subject IDs"
 bcftools query -l $inprefix.chr1.pruned.vcf.gz | tr '_' '\t' | awk '{print$1"_"$2"\t"$1"\t"$2}' > $inprefix.pruned.subjectIDs
 
 echo "Split by ansestry cutoff 0.95"
-Rscript  $PBS_O_WORKDIR/required_tools/split_by_ancestry/split_by_ancestry.R $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
+Rscript $split_by_ancestry $inprefix.pruned.intersect1KG.5.Q.IDs $inprefix.pruned.subjectIDs 0.95
 
 
 SPLIT_FUN() {
     # bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\n' $myinput > $inprefix.pos
     # plink --vcf $myinput --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix
-    plink2 --vcf $myinput.chr$1.vcf.gz --make-bed --id-delim '_' --out $inprefix.chr$1
+    $plink2 --vcf $myinput.chr$1.vcf.gz --make-bed --id-delim '_' --out $inprefix.chr$1
 
     for i in {1..5} mixed; do 
         if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids ]; then
             # plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix.ancestry-$i
-            plink2 --bfile $inprefix.chr$1 --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --make-bed --out $inprefix.ancestry-$i.chr$1
+            $plink2 --bfile $inprefix.chr$1 --keep $inprefix.pruned.intersect1KG.5.Q.IDs.$i.ids --make-bed --out $inprefix.ancestry-$i.chr$1
         fi
         echo "ancestry-${i}.chr$1 done"
     done
@@ -161,7 +168,7 @@ SPLIT_FUN() {
     # Shaun: mixed included in the for-loop above, allowed by bash-syntax
     # if [ -f $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids ]; then
     #     # plink --bfile $inprefix --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --a1-allele $inprefix.pos 5 3 --make-bed --out $inprefix.ancestry-mixed
-    #     plink2 --bfile $inprefix.chr$1 --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --make-bed --out $inprefix.ancestry-mixed.chr$1
+    #     $plink2 --bfile $inprefix.chr$1 --keep $inprefix.pruned.intersect1KG.5.Q.IDs.mixed.ids --make-bed --out $inprefix.ancestry-mixed.chr$1
     #     echo "ancestry-mixed.chr$1 done"
     # fi
 }

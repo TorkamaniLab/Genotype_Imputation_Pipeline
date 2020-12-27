@@ -1,14 +1,18 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=1
-#PBS -l mem=64gb
-# #PBS -q stsi
-#PBS -l walltime=340:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=340:00:00
+#SBATCH --mem=64G
 
+
+date
 echo "Running on node:"
 hostname
+pwd
 
-module load R/3.5.1
+module purge
+module load R
 
 #myinput example: /stsi/raqueld/vcf/6800_JHS_all_chr_sampleID_c2.vcf
 #myoutput example: /stsi/raqueld/0_check_vcf_build/6800_JHS_all_chr_sampleID_c2.BuildChecked
@@ -47,7 +51,7 @@ fi
 echo "Running vcf build check"
 
 # required_tools folder need to locate with this job script
-check_vcf_build=$PBS_O_WORKDIR/required_tools/check_vcf_build/check_vcf_build.R
+check_vcf_build="required_tools/check_vcf_build/check_vcf_build.R"
 if [ ! -f $check_vcf_build ]; then
     echo "check_vcf_build.R not found at ${check_vcf_build}. Make sure you downloaded check_vcf_build.R and changed the check_vcf_build variable inside this job script, so it matches to the path where your check_vcf_build.R if located."
     exit

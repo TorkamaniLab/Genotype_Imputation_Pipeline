@@ -1,15 +1,10 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=16
-#PBS -l mem=120gb
-#PBS -q stsi
-#PBS -l walltime=540:00:00
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=540:00:00
+#SBATCH --mem=100G
 
-date
-
-echo "Running on node:"
-hostname
-pwd
 
 #myoutdir example:
 #/stsi/raqueld/2_GH
@@ -17,17 +12,30 @@ pwd
 #qsub 4_split_QC2.job -v myinput=/gpfs/home/raqueld/mapping_MESA/mesa_genotypes-black.lifted_NCBI36_to_GRCh37.GH.bed,myoutdir=/stsi/raqueld/N_tests,hwe='',geno=0.1,mind=0.1 -N 4_N_mesa_genotypes-black
 #qsub 4_split_QC2.job -v myinput=/stsi/raqueld/3_ancestry/6800_JHS_all_chr_sampleID_c1/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.ancestry-5.bed,myoutdir=/stsi/raqueld/4_split_QC2,hwe='',geno=0.1,mind=0.1 -N 4_6800_JHS_all_chr_sampleID_c1
 
+
+date
+echo "Running on node:"
+hostname
+pwd
+
+
+module purge
 module load samtools
-# module load plink2 # Retired, make sure you have plink2 in your local bin.
+
 
 #Missingness per individual --mind N
 #Missingness per marker --geno N
 #Hardy-Weinberg equilibrium --hwe N
 
+
 starttime=$(date +%s)
 
 export inprefix=$(basename $myinput | sed -e 's/\.bed$//g')
 export indir=$(dirname $myinput)
+
+export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
+export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
+
 outsubdir=$(basename $myinput | sed -e 's~\.lifted.*~~g')
 
 if [ ! -d $myoutdir/$outsubdir ]; then
@@ -61,11 +69,11 @@ fi
 # PLINK_FUN() {
 
 #     if [ "$1" -eq 23 ]; then
-#         # plink --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
-#         plink2 --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
+#         # $plink --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
+#         $plink2 --bfile $indir/$inprefix --chr $1,X --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
 #     else
-#         # plink --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
-#         plink2 --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
+#         # $plink --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --a1-allele  $indir/$inprefix.bim 5 2 --out $inprefix.chr$1
+#         $plink2 --bfile $indir/$inprefix --chr $1 --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1
 #     fi
 
 # }
@@ -73,7 +81,7 @@ fi
 
 
 PLINK2_FUN() {
-    plink2 --bfile $indir/$inprefix.chr$1 --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1.tmp
+    $plink2 --bfile $indir/$inprefix.chr$1 --make-bed $hweflag $mindflag $genoflag --out $inprefix.chr$1.tmp
 }
 export -f PLINK2_FUN
 
@@ -84,7 +92,7 @@ plinkendtime=$(date +%s)
 
 
 REMOVE_FUN() {
-    plink2 --bfile $inprefix.chr$1.tmp --remove $inprefix.tmp.mindrem.id --make-bed --out $inprefix.chr$1
+    $plink2 --bfile $inprefix.chr$1.tmp --remove $inprefix.tmp.mindrem.id --make-bed --out $inprefix.chr$1
 }
 export -f REMOVE_FUN
 
@@ -101,7 +109,7 @@ parallel REMOVE_FUN ::: {1..22}
 #         echo $inprefix.chr$i >> $inprefix.chrlist
 #     fi 
 # done 
-# plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --a1-allele $indir/$inprefix.bim 5 2 --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
+# $plink --bfile $inprefix.chr1 --merge-list $inprefix.chrlist --remove $inprefix.irem --allow-extra-chr --a1-allele $indir/$inprefix.bim 5 2 --biallelic-only --set-missing-var-ids @:#\$1:\$2 --make-bed --out $inprefix.m
 
 if [ -f $inprefix.chrlist ]; then 
    rm $inprefix.chrlist
