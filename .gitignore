@@ -4,7 +4,7 @@ log*/*
 
 *.o*
 
-submit_ukbb_5-6.sh
+submit*_ukbb_5-6.sh
 3_ancestry_analysis-eMergeIII.job
 3_ancestry_analysis_quicktest.job
 3_ancestry_analysis_admixture_only.job
