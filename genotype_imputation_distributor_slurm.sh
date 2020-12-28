@@ -154,13 +154,14 @@ infile=$(basename ${myinput})
 prefix=$(echo $infile | sed -e 's/\.vcf.gz$//g' | sed -e 's/\.txt$//g' )
 
 # Assign submission command line
-job0='sbatch --export=myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
-job1='sbatch --export=myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
-job2='sbatch  --export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
-job3='sbatch --export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} --job-name=3_${prefix} --out=3_${prefix}.o%j --error=3_${prefix}.e%j 3_ancestry_analysis.slurm.sh'
-job4='sbatch --export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
-job5='sbatch --export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
-job6='sbatch --export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
+schedular='sbatch'
+job0='--export=myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
+job1='--export=myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
+job2='--export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
+job3='--export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} --job-name=3_${prefix} --out=3_${prefix}.o%j --error=3_${prefix}.e%j 3_ancestry_analysis.slurm.sh'
+job4='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
+job5='--export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
+job6='--export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
 
 echo "--------------------------"
 echo "## Preview command line ##"
@@ -188,7 +189,7 @@ ancestry="1 2 3 4 5 mixed"
 declare -A flag_arr
 
 job() {
-    job="$1" run="$2" step="$3" start_from="$4" stop_after="$5" anc="$6" chrom="$7"
+    schedular="$1" job="$2" run="$3" step="$4" start_from="$5" stop_after="$6" anc="$7" chrom="$8"
 
     # check if step isin range
     if [ $step -ge $start_from ] && [ $step -le $stop_after ]; then
@@ -210,15 +211,15 @@ job() {
         fi
 
         # recompose the qsub command line with proper variables
-        job=$(eval echo ${job} ${depend_flag})
-        echo $job
+        job_command=$(eval echo ${schedular} ${depend_flag} ${job})
+        echo $job_command
         
         # run if debugging mode disabled, recording job_ID
         if [ $run -eq 1 ]; then
             job_ID=""
             
             # submit the job and save jobID
-            submit_job=$(${job})
+            submit_job=$(${job_command})
             echo ${submit_job}
             
             job_ID=$(echo ${submit_job} | tr ' ' '\n' | tail -1)
@@ -247,9 +248,9 @@ echo "--------------------"
 echo "## Job submission ##"
 echo "--------------------"
 
-job "$job0" "$run" 0 "$start_from" "$stop_after"; echo
+job "$schedular" "$job0" "$run" 0 "$start_from" "$stop_after"; echo
 
-job "$job1" "$run" 1 "$start_from" "$stop_after"; echo
+job "$schedular" "$job1" "$run" 1 "$start_from" "$stop_after"; echo
 
 
 
@@ -268,23 +269,23 @@ job "$job1" "$run" 1 "$start_from" "$stop_after"; echo
         echo
         echo "INFO: Lifted status: $lifted_code"; echo
 
-        job "$job2" "$run" 2 "$start_from" "$stop_after"; echo
+        job "$schedular" "$job2" "$run" 2 "$start_from" "$stop_after"; echo
 
-        job "$job3" "$run" 3 "$start_from" "$stop_after"; echo
+        job "$schedular" "$job3" "$run" 3 "$start_from" "$stop_after"; echo
 
         for anc in $ancestry; do
-            job "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
+            job "$schedular" "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
         done; echo
 
         for anc in $ancestry; do
             for chrom in {1..22}; do
-                job "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
+                job "$schedular" "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
             done
         done; echo
 
         for anc in $ancestry; do
             for chrom in {1..22}; do
-                job "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
+                job "$schedular" "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
             done
         done; echo
     fi

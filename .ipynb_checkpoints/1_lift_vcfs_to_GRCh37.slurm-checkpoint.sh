@@ -20,8 +20,7 @@ echo "Running on node:"
 hostname
 pwd
 
-
-newgrp tlabdbgap
+# newgrp tlabdbgap
 
 module purge
 module load ucsc_tools/373
