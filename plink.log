@@ -1,0 +1,12 @@
+PLINK v1.90b6.13 64-bit (30 Nov 2019)
+Options in effect:
+  --hwe 1e-6
+
+Hostname: login02
+Working directory: /mnt/stsi/stsi0/sfchen/dbGaP/Genotype_Imputation_Pipeline
+Start time: Tue Jan 12 13:10:11 2021
+
+Error: No input dataset.
+For more information, try "plink --help <flag name>" or "plink --help | more".
+
+End time: Tue Jan 12 13:10:11 2021

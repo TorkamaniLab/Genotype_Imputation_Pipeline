@@ -21,6 +21,7 @@ do
         ### START Long options:
         "--confirm")    rawOptions[$pos]="-c" ;;
         "--wgs")    rawOptions[$pos]="-w" ;;
+        "--hwe")    rawOptions[$pos]="-h" ;;       
         "--archived")    rawOptions[$pos]="-a" ;;
         "--start")   rawOptions[$pos]="-s" ;;
         "--end")   rawOptions[$pos]="-n" ;;
@@ -50,22 +51,23 @@ then
     echo "${rawOptions[@]}"
 fi
 
-while getopts "cwa:s:n:v:o:r:l:t::" option "${rawOptions[@]}"
+while getopts "cwha:s:n:v:o:r:l:t::" option "${rawOptions[@]}"
 ### END Option Descriptor
 do
     case "$option" in
 
         ### START: Option variables
-        "c")  confirm=true  ;;
-        "w")  wgs=true  ;;
+        "c")  confirm_run=true  ;;
+        "w")  wgs_mode=true  ;;
+        "h")  hwe_mode=true  ;;
         "a")  archived=${OPTARG}  ;;
         "s")  start_from=${OPTARG}  ;;
         "n")  stop_after=${OPTARG}  ;;
         "v")  myinput="${OPTARG}" ;;
         "o")  outroot="${OPTARG}" ;;
-        "r")  ref="${OPTARG}" ;;
-        "l")  LAIref="${OPTARG}" ;;
-        "t")  temp="${OPTARG}" ;;
+        "r")  ref_mode="${OPTARG}" ;;
+        "l")  LAI_ref="${OPTARG}" ;;
+        "t")  tempdir="${OPTARG}" ;;
         ### END: Option variables
 
         \?) echo "Unknown option -${OPTARG}"
@@ -94,7 +96,7 @@ echo -e " ##          Torkamani Lab         ## "
 echo -e " ##                                ## "
 echo -e " ##         Author: Raquel Dias    ## "
 echo -e " ##                 Shaun Chen     ## "
-echo -e " ##  Last modified: 12/27/19       ## "
+echo -e " ##  Last modified: 01/12/21       ## "
 echo -e " ##                                ## "
 echo -e " #################################### "
 echo 
@@ -108,6 +110,7 @@ echo -e "          --start -s [INT]    First step"
 echo -e "          --end -e [INT]      Last step"
 echo -e "          --temp -t [STR]     (Optional) Enable larger temp storage in step2 (or use TMP scratch folder)"
 echo -e "          --wgs -w            (Optional) Enable variant down-sampling in step3 for WGS/imputed data"
+echo -e "          --hwe -h            (Optional) Enable Hardy–Weinberg equilibrium (HWE) filering in step4 for non-mixed population 'plink --hwe 1e-10'"
 echo -e "          --confirm -c        (Optional) Initiate working mode"
 # echo -e "          --lai-ref -l [STR]  (todo) Local ancestry inference reference panel (1000G, HRC-1000G, HGDP or SGDP)" #TODO
 # echo -e "          --archived -a [INT] (todo) Enable archived version (start from 0); use the latest one if no flag provided"  #TODO
@@ -116,7 +119,7 @@ echo
 echo -e 'Prepare input:  for chrom in {1..22}; do printf "${chrom}\\t$(ls $(pwd)/[##inprefix##]*chr${chrom}.vcf.gz)\\n"; done > [##inprefix##].txt'
 echo
 echo -e "Debug Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/SHARE_MESA_c2_flipfix.vcf --out /mnt/stsi/stsi0/raqueld --ref HRC --start 0 --end 1 > MESA_jobs_c1_0-1.txt"
-echo -e "Working Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/c1_ARIC_WGS_Freeze3.vcf --out /mnt/stsi/stsi0/sfchen/dbgap/aric_wgs --ref HRC --start 2 --end 6 --temp /mnt/stsi/stsi0/sfchen/temp --wgs --confirm > ARIC_WGS_2-6.txt"
+echo -e "Working Example:  bash script.sh --vcf /mnt/stsi/stsi0/raqueld/vcf/c1_ARIC_WGS_Freeze3.vcf --out /mnt/stsi/stsi0/sfchen/dbgap/aric_wgs --ref HRC --start 2 --end 6 --temp /mnt/stsi/stsi0/sfchen/temp --wgs --hwe --confirm > ARIC_WGS_2-6.txt"
 echo 
 
 
@@ -129,19 +132,20 @@ echo "---------------------"
 # Default settings
 if [ -z $myinput ]; then echo "WARNING: Please provide the path of input vcf file."; echo ; exit; fi
 if [ -z $outroot ]; then outroot="$PWD/IMP_QC"; echo "INFO: No OUT_ROOT, assign default path: " $outroot; fi
-if [ "$ref" != "HRC" ] && [ "$ref" != "1KG" ]; then echo "WARNING: Invalid reference panel, please use current supported HRC or 1KG."; echo; exit; fi
-# if [ "$LAIref" != "HRC" ] && [ "$LAIref" != "1KG" ]; then echo "WARNING:  Invalid reference panel, please use current supported HRC or 1KG."; echo; exit; fi
+if [ "$ref_mode" != "HRC" ] && [ "$ref_mode" != "1KG" ]; then echo "WARNING: Invalid reference panel, please use current supported HRC or 1KG."; echo; exit; fi
+# if [ "$LAI_ref" != "HRC" ] && [ "$LAIref" != "1KG" ]; then echo "WARNING:  Invalid reference panel, please use current supported HRC or 1KG."; echo; exit; fi
 if [ -z $start_from ] || ! [[ "$start_from" =~ ^[0-9]+$ ]]; then echo "WARNING: Invalid start step number."; echo; exit; fi
 if [ -z $stop_after ] || ! [[ "$stop_after" =~ ^[0-9]+$ ]]; then echo "WARNING: Invalid end step number."; echo; exit; fi
 if [ $start_from -gt $stop_after ]; then echo "WARNING: end step number should be larger then start one."; echo; exit; fi
 # if [ -z $archived ]; then echo "INFO: No archived: use the latest pipeline."; else archived=archived/v${archived}/; fi
-if [ -z $temp ]; then echo "INFO: No CUSTOM_TEMP: use system scratch folder (limited to 30GB temporary storage)"; fi
-if [ "$wgs" == true ]; then wgs_mode='yes'; else wgs_mode='no'; fi
-if [ "$confirm" == true ]; then run=1; else run=0; fi
+if [ -z $tempdir ]; then echo "INFO: No CUSTOM_TEMP: use system scratch folder (limited to 30GB temporary storage)"; fi
+if [ "$wgs_mode" == true ]; then wgs='yes'; else wgs='no'; fi
+if [ "$hwe_mode" == true ]; then hwe='yes'; else hwe='no'; fi
+if [ "$confirm_run" == true ]; then run=1; else run=0; fi
 echo "User input:  VCF_PATH: ${myinput}"
 echo "             OUT_ROOT: ${outroot}"
-echo "             CUSTOM_TEMP: ${temp}"
-echo "User option: REF=${ref}, START=${start_from}, STOP=${stop_after}, WGS=${wgs_mode}, RUN=${run}"
+echo "             CUSTOM_TEMP: ${tempdir}"
+echo "User option: REF=${ref_mode}, START=${start_from}, STOP=${stop_after}, WGS=${wgs}, HWE=${hwe}, RUN=${run}"
 echo 
 
 
@@ -158,8 +162,9 @@ schedular='sbatch'
 job0='--export=myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
 job1='--export=myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
 job2='--export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
-job3='--export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs_mode} --job-name=3_${prefix} --out=3_${prefix}.o%j --error=3_${prefix}.e%j 3_ancestry_analysis.slurm.sh'
+job3='--export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs} --job-name=3_${prefix} --out=3_${prefix}.o%j 3_ancestry_analysis.slurm.sh'
 job4='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
+job4_hwe='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05,hwe=1e-10 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
 job5='--export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
 job6='--export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
 
@@ -188,7 +193,7 @@ ancestry="1 2 3 4 5 mixed"
 # declare dictionary for depend flag
 declare -A flag_arr
 
-job() {
+make_job() {
     schedular="$1" job="$2" run="$3" step="$4" start_from="$5" stop_after="$6" anc="$7" chrom="$8"
 
     # check if step isin range
@@ -248,9 +253,9 @@ echo "--------------------"
 echo "## Job submission ##"
 echo "--------------------"
 
-job "$schedular" "$job0" "$run" 0 "$start_from" "$stop_after"; echo
+make_job "$schedular" "$job0" "$run" 0 "$start_from" "$stop_after"; echo
 
-job "$schedular" "$job1" "$run" 1 "$start_from" "$stop_after"; echo
+make_job "$schedular" "$job1" "$run" 1 "$start_from" "$stop_after"; echo
 
 
 
@@ -269,23 +274,35 @@ job "$schedular" "$job1" "$run" 1 "$start_from" "$stop_after"; echo
         echo
         echo "INFO: Lifted status: $lifted_code"; echo
 
-        job "$schedular" "$job2" "$run" 2 "$start_from" "$stop_after"; echo
+        make_job "$schedular" "$job2" "$run" 2 "$start_from" "$stop_after"; echo
 
-        job "$schedular" "$job3" "$run" 3 "$start_from" "$stop_after"; echo
+        make_job "$schedular" "$job3" "$run" 3 "$start_from" "$stop_after"; echo
 
-        for anc in $ancestry; do
-            job "$schedular" "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
-        done; echo
+        if [ "$hwe" == 'yes' ]; then
+            for anc in $ancestry; do
+                if [ "$anc" == "mixed" ]; then
+                    make_job "$schedular" "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
+                else
+                    make_job "$schedular" "$job4_hwe" "$run" 4 "$start_from" "$stop_after" "$anc"
+                fi
+            done; echo               
+        else
+            for anc in $ancestry; do
+                make_job "$schedular" "$job4" "$run" 4 "$start_from" "$stop_after" "$anc"
+            done; echo
+        fi
+
+
 
         for anc in $ancestry; do
             for chrom in {1..22}; do
-                job "$schedular" "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
+                make_job "$schedular" "$job5" "$run" 5 "$start_from" "$stop_after" "$anc" "$chrom"
             done
         done; echo
 
         for anc in $ancestry; do
             for chrom in {1..22}; do
-                job "$schedular" "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
+                make_job "$schedular" "$job6" "$run" 6 "$start_from" "$stop_after" "$anc" "$chrom"
             done
         done; echo
     fi
