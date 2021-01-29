@@ -165,19 +165,19 @@ job2='--export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${out
 job3='--export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs} --job-name=3_${prefix} --out=3_${prefix}.o%j 3_ancestry_analysis.slurm.sh'
 job4='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
 job4_hwe='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05,hwe=1e-10 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
-job5='--export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
-job6='--export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
+job5='--export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref_mode} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
+job6='--export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref},reftype=${ref_mode} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
 
 echo "--------------------------"
 echo "## Preview command line ##"
 echo "--------------------------"
-echo "~\$ "$job0
-echo "~\$ "$job1
-echo "~\$ "$job2
-echo "~\$ "$job3
-echo "~\$ "$job4
-echo "~\$ "$job5
-echo "~\$ "$job6
+echo "~\$ "$schedular $job0
+echo "~\$ "$schedular $job1
+echo "~\$ "$schedular $job2
+echo "~\$ "$schedular $job3
+echo "~\$ "$schedular $job4
+echo "~\$ "$schedular $job5
+echo "~\$ "$schedular $job6
 echo
 
 # empty depend step flag by default
