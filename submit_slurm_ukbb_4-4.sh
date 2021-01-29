@@ -4,7 +4,7 @@ parmax=$1
 
 echo "setting max job number as ${parmax}"
 
-for i in {000..048}; do
+for i in {022..048}; do
     
     while :; do
     
