@@ -44,12 +44,12 @@ cd $myoutdir/$outsubdir
 # cd $myoutdir
 
 
-if [ "$reftype" == "HRC" ]; then
-        myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
-        echo "Using HRC reference panel, file: ${myref}"
+if [ "$reftype" == "1KG" ]; then
+    myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz
+    echo "Using 1KG reference panel, file: ${myref}"
 else
-        myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz
-        echo "Using 1KG reference panel, file: ${myref}"
+    myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
+    echo "Using HRC reference panel, file: ${myref}"
 fi
 
 echo "Running Imputation"

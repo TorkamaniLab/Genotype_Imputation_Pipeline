@@ -4,7 +4,7 @@ parmax=$1
 
 echo "setting max job number as ${parmax}"
 
-for i in {000..048}; do
+for i in {044..048}; do
     
     while :; do
     
@@ -17,9 +17,9 @@ for i in {000..048}; do
               --vcf /mnt/stsi/stsi0/sfchen/UKBB/1_split_QC/ukb_hap_v2_${i}.txt \
               --out /mnt/stsi/stsi0/sfchen/UKBB/1_split_QC/ukbb_hap_v2_${i} \
               --ref HRC \
-              --start 5 \
+              --start 6 \
               --end 6 \
-              --temp /mnt/stsi/stsi0/sfchen/temp --confirm > UKBB_hap_v2_${i}_5-6.txt
+              --temp /mnt/stsi/stsi0/sfchen/temp --confirm > UKBB_hap_v2_${i}_6-6.txt
             break
         fi
         sleep 120
