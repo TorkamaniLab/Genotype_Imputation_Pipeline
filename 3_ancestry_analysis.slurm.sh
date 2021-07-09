@@ -6,8 +6,20 @@
 #SBATCH --mem=100G
 
 
-#How to run Example
-#qsub 3_ancestry_analysis.job -v myinput=/stsi/raqueld/2_GH/6800_JHS_all_chr_sampleID_c1.lifted_hg19_to_GRCh37.GH.vcf.gz,myoutdir=/stsi/raqueld/3_ancestry -N 3_6800_JHS_all_chr_sampleID_c1
+#if running outside pipeline (standalone version), create symbolic links to make your file names match to the expected syntax
+#the file suffix should look like this: .lifted_hg38_to_hg19.GH.chr1.vcf.gz
+#chromosome number should be the only variable part of the name
+#Example from my work dir:
+#wdir=/mnt/stsi/stsi5/raqueld/HGDP/WGS/hg19_from_hg38
+#cd $wdir/ancestry
+#for i in $wdir/picard_QC/hgdp_wgs.20190516.statphase.autosomes.chr{1..22}.hg19.concat.rename.bi.dense.vcf.gz; do
+#    chr=$(basename $i | sed -e 's/.*\.chr//g' | sed -e 's/\..*//g')
+#    newname=$(basename $i | sed -e "s/chr$chr\.//g" | sed -e "s/\.vcf\.gz$/\.lifted_hg38_to_hg19\.GH\.chr$chr\.vcf\.gz/g")
+#    ln -s $i $newname
+#    ln -s $i.tbi $newname.tbi
+#done
+#then run the job
+#sbatch --export=myinput=$wdir/ancestry/hgdp_wgs.20190516.statphase.autosomes.hg19.concat.rename.bi.dense.lifted_hg38_to_hg19.GH,myoutdir=$wdir/ancestry,WGS=yes --job-name=ancestry_HGDP 3_ancestry_analysis.slurm.sh
 
 #Step 3 consists of
 #Prune markers in input file by 0.05 LD threshold
@@ -21,6 +33,7 @@ echo "Running on node:"
 hostname
 pwd
 
+echo SLURM_SUBMIT_DIR: $SLURM_SUBMIT_DIR
 
 module purge
 module load vcftools
@@ -57,7 +70,7 @@ PRUNE_FUN() {
     if [ ${WGS} == "yes" ]; then
         echo "Extracting 23andMe positions only for ancestry analysis, for speeding up ancestry analysis. Original positions will be restored later"
         #positions extracted from 190410_snps.23andme.clean.drop_dup.sorted.data
-        bcftools view -R $PBS_O_WORKDIR/required_tools/chr_pos_23andme.txt ${myinput}.chr$1.vcf.gz -Ov -o ${inprefix}.chr$1.23andMe_pos.vcf
+        bcftools view -R $SLURM_SUBMIT_DIR/required_tools/chr_pos_23andme.txt ${myinput}.chr$1.vcf.gz -Ov -o ${inprefix}.chr$1.23andMe_pos.vcf
         $plink2 --vcf ${inprefix}.chr$1.23andMe_pos.vcf --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
     else
         $plink2 --vcf $myinput.chr$1.vcf.gz --indep-pairwise 100 10 0.05 --out $inprefix.chr$1 # produces <name.prune.in> and <name.prune.out>
