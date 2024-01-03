@@ -159,14 +159,14 @@ prefix=$(echo $infile | sed -e 's/\.vcf.gz$//g' | sed -e 's/\.txt$//g' )
 
 # Assign submission command line
 schedular='sbatch'
-job0='--export=myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
-job1='--export=myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
-job2='--export=myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
-job3='--export=myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs} --job-name=3_${prefix} --out=3_${prefix}.o%j 3_ancestry_analysis.slurm.sh'
-job4='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
-job4_hwe='--export=myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05,hwe=1e-10 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
-job5='--export=myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref_mode} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
-job6='--export=myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref_mode},reftype=${ref_mode} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
+job0='--export=ALL,myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
+job1='--export=ALL,myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
+job2='--export=ALL,myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
+job3='--export=ALL,myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs} --job-name=3_${prefix} --out=3_${prefix}.o%j 3_ancestry_analysis.slurm.sh'
+job4='--export=ALL,myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
+job4_hwe='--export=ALL,myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05,hwe=1e-10 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'
+job5='--export=ALL,myinput=${outroot}/4_split_QC2/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.bed,myoutdir=${outroot}/5_phase,reftype=${ref_mode} --job-name=5_${prefix} --out=5_${prefix}.o%j 5_phase.slurm.sh'
+job6='--export=ALL,myinput=${outroot}/5_phase/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc}.chr${chrom}.phased.vcf.gz,myoutdir=${outroot}/6_impute_${ref_mode},reftype=${ref_mode} --job-name=6_${prefix} --out=6_${prefix}.o%j 6_impute.slurm.sh'
 
 echo "--------------------------"
 echo "## Preview command line ##"
