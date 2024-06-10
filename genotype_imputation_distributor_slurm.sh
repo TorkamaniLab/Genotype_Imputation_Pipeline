@@ -160,7 +160,7 @@ prefix=$(echo $infile | sed -e 's/\.vcf.gz$//g' | sed -e 's/\.txt$//g' )
 # Assign submission command line
 schedular='sbatch'
 job0='--export=ALL,myinput=${myinput},myoutput=${outroot}/0_check_vcf_build/${prefix}.BuildChecked --job-name=0_${prefix} --out=0_${prefix}.o%j 0_check_vcf_build.slurm.sh'
-job1='--export=ALL,myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${temp} --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
+job1='--export=ALL,myinput=${myinput},buildcheck=${outroot}/0_check_vcf_build/${prefix}.BuildChecked,myoutdir=${outroot}/1_lift,custom_temp=${outroot}/1_lift/temp --job-name=1_${prefix} --out=1_${prefix}.o%j 1_lift_vcfs_to_GRCh37.slurm.sh'
 job2='--export=ALL,myinput=${outroot}/1_lift/${prefix}.${lifted_code},myoutdir=${outroot}/2_GH --job-name=2_${prefix} --out=2_${prefix}.o%j 2_Genotype_Harmonizer_QC1.slurm.sh'
 job3='--export=ALL,myinput=${outroot}/2_GH/${prefix}.${lifted_code}.GH,myoutdir=${outroot}/3_ancestry,WGS=${wgs} --job-name=3_${prefix} --out=3_${prefix}.o%j 3_ancestry_analysis.slurm.sh'
 job4='--export=ALL,myinput=${outroot}/3_ancestry/${prefix}/${prefix}.${lifted_code}.GH.ancestry-${anc},myoutdir=${outroot}/4_split_QC2,geno=0.1,mind=0.05 --job-name=4_${prefix} --out=4_${prefix}.o%j 4_split_QC2.slurm.sh'

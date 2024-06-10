@@ -23,7 +23,7 @@ pwd
 # newgrp tlabdbgap
 
 module purge
-module load ucsc_tools/373
+# module load ucsc_tools/373
 module load samtools
 
 
@@ -76,7 +76,7 @@ export -f CHECK_SORT
 
 
 SPLIT_CHR () {
-    bcftools view ${1} -r ${2} -Oz -o ${1/.vcf.gz/}.chr${2}.sorted.vcf.gz
+    bcftools view ${1} -r ${2} -Oz -o ${1/.chrALL.sorted.vcf.gz/}.chr${2}.sorted.vcf.gz
 }
 export -f SPLIT_CHR
 
@@ -98,7 +98,7 @@ LIFT_OVER () {
     bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\n' $name.sorted.bi.vcf.gz > $name.sorted.bi.pos
     # plink --vcf $name.sorted.bi.vcf --make-bed --a1-allele $name.sorted.bi.pos 5 3 --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --out $name.sorted.bi
     # plink --bfile $name.sorted.bi --recode --a1-allele $name.sorted.bi.bim 5 2 --double-id --set-missing-var-ids @:#:\$1:\$2 --out $name
-    $plink --vcf $name.sorted.bi.vcf.gz --make-bed --a1-allele $name.sorted.bi.pos 5 3 --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --double-id --recode ped --id-delim '_' --out $name
+    $plink --vcf $name.sorted.bi.vcf.gz --make-bed --a1-allele $name.sorted.bi.pos 5 3 --biallelic-only strict --set-missing-var-ids @:#:\$1:\$2 --vcf-half-call missing --double-id --recode ped --out $name
     # NOTE: '_' is FID_IID deliminator, keep watching if exception ID appeared.
     # TODO update to plink2 when it supported ped files.
     
@@ -117,7 +117,7 @@ LIFT_OVER () {
             dupflag=""
         fi
         # plink --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --a1-allele $name.sorted.bi.bim 5 2 --make-bed --out $name.lifted_already_GRCh37
-        $plink2 --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --make-bed --out $name.lifted_already_GRCh37
+        $plink2 --bfile $name.lifted_already_GRCh37.sorted.with_dup $dupflag --double-id --make-bed --out $name.lifted_already_GRCh37
         
         for bfile in bed bim fam; do
             mv $name.lifted_already_GRCh37.${bfile} $inprefix.lifted_already_GRCh37.chr$1.${bfile}
@@ -194,8 +194,10 @@ if [[ ${myinput} == *.txt ]]; then
     parallel CHECK_SORT {1} :::: ${myinput}
 elif [[ ${myinput} == *.vcf.gz ]]; then 
     echo "Input file is merged; split by chromsome."
-    CHECK_SORT "ALL\t${myinput}"
-    SPLIT_CHR ./${inprefix}.chrALL.sorted.vcf.gz {1} ::: {1..22}
+    echo -e "ALL\t${myinput}" > ./${inprefix}.txt
+    parallel CHECK_SORT {1} :::: ./${inprefix}.txt
+    # CHECK_SORT "ALL\t${myinput}"
+    parallel SPLIT_CHR ./${inprefix}.chrALL.sorted.vcf.gz {1} ::: {1..22}
 else  
     echo "Invalid file format, please check the input."
     exit
