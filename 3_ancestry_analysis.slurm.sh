@@ -95,7 +95,7 @@ ISEC_FUN() {
     echo "Generating intersection between input data and reference panel for ancestry"
     bcftools isec \
       $inprefix.chr$1.pruned.vcf.gz \
-      /mnt/stsi/stsi0/raqueld/1000G/ALL.chr$1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz \
+      /mnt/stsi/stsi3/Internal/1000G/ref_panel/hg19/vcf/ALL.chr$1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.clean.vcf.gz \
       -p ${inprefix}.chr$1_tmp -n =2  -w 1,2 -Oz
     
     bcftools merge ${inprefix}.chr$1_tmp/0000.vcf.gz ${inprefix}.chr$1_tmp/0001.vcf.gz \

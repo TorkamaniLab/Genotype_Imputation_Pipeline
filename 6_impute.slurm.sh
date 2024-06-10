@@ -45,10 +45,10 @@ cd $myoutdir/$outsubdir
 
 
 if [ "$reftype" == "1KG" ]; then
-    myref=/mnt/stsi/stsi0/raqueld/1000G/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz
+    myref=/mnt/stsi/stsi3/Internal/1000G/ref_panel/hg19/m3vcf_erate_rec/ALL.chr$mychr.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.m3vcf.gz
     echo "Using 1KG reference panel, file: ${myref}"
 else
-    myref=/mnt/stsi/stsi0/raqueld/HRC/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
+    myref=/mnt/stsi/stsi3/Internal/HRC/ref_panel/hg19/m3vcf_erate_rec/HRC.r1-1.EGA.GRCh37.chr$mychr.haplotypes.m3vcf.gz
     echo "Using HRC reference panel, file: ${myref}"
 fi
 
