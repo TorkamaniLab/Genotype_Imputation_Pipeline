@@ -41,8 +41,10 @@ starttime=$(date +%s)
 
 #change this path to your own reference path
 if [ -z $ref_path ]; then
-    export ref_path=/mnt/stsi/stsi0/raqueld/1000G
+    export ref_path=/mnt/stsi/stsi3/External/1000G/ref_panel/hg19
     echo "No reference path provided, check step 2 instructions in README. Using the following path as default: $ref_path"
+    
+    export fasta_ref="/mnt/stsi/stsi3/External/reference_fasta/hg19/human_g1k_v37.fasta"
 fi
 
 if [ ! -d $myoutdir ]; then
@@ -151,6 +153,8 @@ echo "GH done."
 
 
 FIXREF_FUN () {
+
+
     echo "Merging all chromosomes..."
     # NOTE: --id-delim can no longer be used with --const-fid or --double-id.
     $plink2 --bfile $outname.chr$1 --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --export vcf-4.2 bgz --double-id --out $outname.chr$1.0
@@ -159,12 +163,12 @@ FIXREF_FUN () {
     #rm $outname.m.bed $outname.m.bim $outname.m.fam
 
     echo "Doing last check for allele swaps"
-    bcftools +fixref $outname.chr$1.0.vcf.gz --threads 16 -Oz -o $outname.chr$1.1.vcf.gz -- -f $ref_path/human_g1k_v37.fasta -m flip -d
+    bcftools +fixref $outname.chr$1.0.vcf.gz --threads 16 -Oz -o $outname.chr$1.1.vcf.gz -- -f ${fasta_ref} -m flip -d
 
     tabix -p vcf $outname.chr$1.1.vcf.gz
     #rm $outname.0.vcf.gz
 
-    bcftools view -Ou -c 2 $outname.chr$1.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.chr$1.vcf.gz -d both -f $ref_path/human_g1k_v37.fasta
+    bcftools view -Ou -c 2 $outname.chr$1.1.vcf.gz | bcftools norm -m -any | bcftools norm --threads 16 -Oz -o $outname.chr$1.vcf.gz -d both -f ${fasta_ref}
 
     tabix -p vcf $outname.chr$1.vcf.gz
 
