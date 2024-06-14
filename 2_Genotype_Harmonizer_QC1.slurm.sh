@@ -156,8 +156,8 @@ FIXREF_FUN () {
 
 
     echo "Merging all chromosomes..."
-    # NOTE: --id-delim can no longer be used with --const-fid or --double-id.
-    $plink2 --bfile $outname.chr$1 --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --export vcf-4.2 bgz --double-id --out $outname.chr$1.0
+    # NOTE: --id-delim can no longer be used with --const-fid or --double-id. # --double-id
+    $plink2 --bfile $outname.chr$1 --max-alleles 2 --set-missing-var-ids @:#\$1:\$2 --export vcf-4.2 bgz --out $outname.chr$1.0
 
     tabix -p vcf $outname.chr$1.0.vcf.gz
     #rm $outname.m.bed $outname.m.bim $outname.m.fam

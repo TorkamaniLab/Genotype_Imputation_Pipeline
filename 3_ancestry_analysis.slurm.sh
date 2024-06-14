@@ -138,7 +138,7 @@ for i in $(seq 1 1 $inputN); do
      echo
 done >> $inprefix.pruned.intersect1KG.pop
 
-cat /gpfs/group/torkamani/raqueld/ancestry/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
+cat /mnt/stsi/stsi3/Internal/1000G/metadata/1000G_P3_super_pop.pop  >> ./$inprefix.pruned.intersect1KG.pop
 
 
 vcfendtime=$(date +%s)
