@@ -26,15 +26,8 @@ The pipeline was tested in garibaldi using the following required software and p
 
 If you are in garibaldi, you don't need to install these packages, and tools, they are either loaded by the job script, or executed from the required_tools directory included in this repository (see bellow).
 
-## How to run
 
-Before starting the pipeline, copy the contends of the required_tools folder into your home folder in garibaldi:
-
-```
-cp -r required_tools $HOME/
-```
-
-After copying the required tools, please read the following instructions on how to run the steps 0-6 manually (automated metod comming soon!).
+## A. Running all steps manually
 
 ### Step 0: Check genome build and select chain file
 
@@ -156,7 +149,7 @@ date
 
 ---
 
-## Running all steps automatically 
+## B. Running all steps automatically 
 
 This script will setup job dependencies and submit/monitore all the jobs for all the steps automatically.
 
