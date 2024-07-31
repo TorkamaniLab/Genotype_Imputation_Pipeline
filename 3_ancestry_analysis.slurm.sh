@@ -41,7 +41,7 @@ module load admixture
 module load samtools
 module load R
 
-1000G_pop=$(pwd)/1000G_P3_super_pop.pop
+ref_pop="$(pwd)/required_tools/1000G_P3_super_pop.pop"
 
 export plink="$SLURM_SUBMIT_DIR/required_tools/plink"
 export plink2="$SLURM_SUBMIT_DIR/required_tools/plink2"
@@ -139,7 +139,7 @@ for i in $(seq 1 1 $inputN); do
      echo
 done >> $inprefix.pruned.intersect1KG.pop
 
-cat ${1000G_pop} >> ./$inprefix.pruned.intersect1KG.pop
+cat ${ref_pop} >> $inprefix.pruned.intersect1KG.pop
 
 
 vcfendtime=$(date +%s)
